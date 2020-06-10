@@ -1,0 +1,126 @@
+.toolbar-floating .domx-toolbar {
+  position: fixed;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+}
+
+.domx-toolbar {
+  border-bottom: 1px solid #eeeeee;
+  background: #ffffff;
+  width: 100%;
+}
+.domx-toolbar > ul {
+  margin: 0;
+  padding: 0 0 0 6px;
+  list-style: none;
+}
+.domx-toolbar > ul > li {
+  position: relative;
+  display: inline-block;
+  font-size: 0;
+}
+.domx-toolbar > ul > li > span.separator {
+  display: inline-block;
+  background: #cfcfcf;
+  width: 1px;
+  height: 18px;
+  margin: 11px 15px;
+  vertical-align: middle;
+}
+.domx-toolbar > ul > li > .toolbar-item {
+  display: inline-block;
+  width: 36px;
+  height: 30px;
+  outline: none;
+  color: #333333;
+  font-size: 12px;
+  line-height: 30px;
+  vertical-align: middle;
+  text-align: center;
+  text-decoration: none;
+}
+.domx-toolbar > ul > li > .toolbar-item span {
+  opacity: 0.6;
+}
+
+
+.domx-toolbar > ul > li > .toolbar-item:hover span {
+  opacity: 1;
+}
+.domx-toolbar > ul > li > .toolbar-item.active {
+  background: #eeeeee;
+}
+.domx-toolbar > ul > li > .toolbar-item.active span {
+  opacity: 1;
+}
+.domx-toolbar > ul > li > .toolbar-item.disabled {
+  cursor: default;
+}
+.domx-toolbar > ul > li > .toolbar-item.disabled span {
+  opacity: 0.3;
+}
+
+.domx-toolbar > ul > li.menu-on .toolbar-item {
+  position: relative;
+  z-index: 20;
+  background: #ffffff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+.domx-toolbar > ul > li.menu-on .toolbar-item span {
+  opacity: 1;
+}
+.domx-toolbar > ul > li.menu-on .toolbar-menu {
+  display: block;
+}
+.domx-toolbar .toolbar-menu {
+  display: none;
+  position: absolute;
+  top: 40px;
+  left: 0;
+  z-index: 21;
+  background: #ffffff;
+  text-align: left;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+}
+.domx-toolbar .toolbar-menu:before {
+  content: '';
+  display: block;
+  width: 46px;
+  height: 4px;
+  background: #ffffff;
+  position: absolute;
+  top: -3px;
+  left: 0;
+}
+.domx-toolbar .toolbar-menu ul {
+  min-width: 160px;
+  list-style: none;
+  margin: 0;
+  padding: 10px 1px;
+}
+.domx-toolbar .toolbar-menu ul > li .menu-item {
+  display: block;
+  font-size: 16px;
+  line-height: 2em;
+  padding: 0 10px;
+  text-decoration: none;
+  color: #666666;
+}
+.domx-toolbar .toolbar-menu ul > li .menu-item:hover {
+  background: #f6f6f6;
+}
+.domx-toolbar .toolbar-menu ul > li .separator {
+  display: block;
+  border-top: 1px solid #cccccc;
+  height: 0;
+  line-height: 0;
+  font-size: 0;
+  margin: 6px 0;
+}
+.sjs.mobile .toolbar-floating .domx-toolbar {
+  position: absolute;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+}
