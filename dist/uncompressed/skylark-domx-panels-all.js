@@ -3078,7 +3078,7 @@ define('skylark-langx-events/Emitter',[
     });
 
 
-    return　events.Emitter = Emitter;
+    return events.Emitter = Emitter;
 
 });
 define('skylark-langx/Emitter',[
@@ -11246,18 +11246,18 @@ define('skylark-domx-panels/Collapse',[
     },
 
     _construct : function(elm,options) {
-      //options = langx.mixin({}, Collapse.DEFAULTS, $(element).data(), options)
+      ////options = langx.mixin({}, Collapse.DEFAULTS, $(element).data(), options)
       this.overrided(elm,options);
       this.$element      = this.$();
-      this.$trigger      = $('[data-toggle="collapse"][href="#' + elm.id + '"],' +
-                             '[data-toggle="collapse"][data-target="#' + elm.id + '"]')
+      //this.$trigger      = $('[data-toggle="collapse"][href="#' + elm.id + '"],' +
+      //                     '[data-toggle="collapse"][data-target="#' + elm.id + '"]')
       this.transitioning = null
 
-      if (this.options.parent) {
-        this.$parent = this.getParent()
-      } else {
-        this.addAriaAndCollapsedClass(this.$element, this.$trigger)
-      }
+      //if (this.options.parent) {
+      //  this.$parent = this.getParent()
+      //} else {
+      //  this.addAriaAndCollapsedClass(this.$element, this.$trigger)
+      //}
 
       if (this.options.toggle) {
         this.toggle();
@@ -11274,23 +11274,23 @@ define('skylark-domx-panels/Collapse',[
         return;
       }
 
-      var activesData;
-      var actives = this.$parent && this.$parent.children('.panel').children('.in, .collapsing')
+      //var activesData;
+      //var actives = this.$parent && this.$parent.children('.panel').children('.in, .collapsing')
 
-      if (actives && actives.length) {
-        activesData = actives.data('collapse')
-        if (activesData && activesData.transitioning) return
-      }
+      //if (actives && actives.length) {
+      //  activesData = actives.data('collapse')
+      //  if (activesData && activesData.transitioning) return
+      //}
 
       var startEvent = eventer.create('show.collapse');
       this.$element.trigger(startEvent)
       if (startEvent.isDefaultPrevented()) return
 
-      if (actives && actives.length) {
-        //Plugin.call(actives, 'hide')
-        actives.plugin("domx.collapse").hide();
-        activesData || actives.data('collapse', null)
-      }
+      //if (actives && actives.length) {
+      //  //Plugin.call(actives, 'hide')
+      //  actives.plugin("domx.collapse").hide();
+      //  activesData || actives.data('collapse', null)
+      //}
 
       var dimension = this.dimension();
 
@@ -11299,9 +11299,9 @@ define('skylark-domx-panels/Collapse',[
         .addClass('collapsing')[dimension](0)
         .attr('aria-expanded', true)
 
-      this.$trigger
-        .removeClass('collapsed')
-        .attr('aria-expanded', true)
+      //this.$trigger
+      //  .removeClass('collapsed')
+      //  .attr('aria-expanded', true)
 
       this.transitioning = 1
 
@@ -11345,9 +11345,9 @@ define('skylark-domx-panels/Collapse',[
         .removeClass('collapse in')
         .attr('aria-expanded', false);
 
-      this.$trigger
-        .addClass('collapsed')
-        .attr('aria-expanded', false);
+      //this.$trigger
+      //  .addClass('collapsed')
+      //  .attr('aria-expanded', false);
 
       this.transitioning = 1;
 
@@ -11371,8 +11371,9 @@ define('skylark-domx-panels/Collapse',[
 
     toggle : function () {
       this[this.$element.hasClass('in') ? 'hide' : 'show']();
-    },
+    }
 
+    /*
     getParent : function () {
       return $(this.options.parent)
         .find('[data-toggle="collapse"][data-parent="' + this.options.parent + '"]')
@@ -11391,12 +11392,12 @@ define('skylark-domx-panels/Collapse',[
         .toggleClass('collapsed', !isOpen)
         .attr('aria-expanded', isOpen);
     }
-
+    */
   });
 
   Collapse.TRANSITION_DURATION = 350;
 
-
+  /*
   function getTargetFromTrigger($trigger) {
     var href
     var target = $trigger.attr('data-target')
@@ -11404,7 +11405,7 @@ define('skylark-domx-panels/Collapse',[
 
     return $(target)
   }
-
+  */
 
   plugins.register(Collapse);
 
