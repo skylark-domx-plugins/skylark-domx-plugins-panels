@@ -3,7 +3,8 @@ define([
     "./Accordion",
     "./Pagination",
     "./TabStrip",
-    "./Toolbar"
+    "./Toolbar",
+    "./Wizard"
 ], function(panels) {
     return panels;
 });

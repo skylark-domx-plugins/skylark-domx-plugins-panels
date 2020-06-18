@@ -186,6 +186,6 @@ define([
 
   plugins.register(Collapse);
 
-  return Collapse;
+  return panels.Collapse = Collapse;
 
 });
