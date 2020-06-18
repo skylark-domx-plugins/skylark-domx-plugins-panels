@@ -1,0 +1,1 @@
+{"version":3,"sources":["main.js"],"names":["define","panels"],"mappings":";;;;;;;AAAAA,QACI,WACA,cACA,eACA,aACA,YACA,YACD,SAASC,GACR,OAAOA","file":"../main.js","sourcesContent":["define([\r\n    \"./panels\",\r\n    \"./Accordion\",\r\n    \"./Pagination\",\r\n    \"./TabStrip\",\r\n    \"./Toolbar\",\r\n    \"./Wizard\"\r\n], function(panels) {\r\n    return panels;\r\n});"]}

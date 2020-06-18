@@ -1,12 +1,12 @@
 define([
   "skylark-langx/langx",
-  "skylark-domx/browser",
-  "skylark-domx/eventer",
-  "skylark-domx/noder",
-  "skylark-domx/geom",
-  "skylark-domx/query",
-    "skylark-domx-plugins",
-    "./panels"
+  "skylark-domx-browser",
+  "skylark-domx-eventer",
+  "skylark-domx-noder",
+  "skylark-domx-geom",
+  "skylark-domx-query",
+  "skylark-domx-plugins",
+  "./panels"
 ],function(langx,browser,eventer,noder,geom,$,plugins,panels){
 
 
