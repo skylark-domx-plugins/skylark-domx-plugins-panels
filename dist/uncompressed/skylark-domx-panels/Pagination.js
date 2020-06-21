@@ -14,7 +14,7 @@ define([
   var Pagination = plugins.Plugin.inherit({
       klassName : "Pagination",
 
-      pluginName : "domx.pagination",
+      pluginName : "domx.panels.pagination",
 
       options : {
           tagName : "ul",

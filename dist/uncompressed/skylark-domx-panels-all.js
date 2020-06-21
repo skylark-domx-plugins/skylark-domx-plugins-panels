@@ -11471,7 +11471,7 @@ define('skylark-domx-panels/HeaderPanel',[
     expand : function() {
       // expand this panel
       this.emit("expanding");
-      this.$body.plugin("domx.collapse").show();
+      this.$body.plugin(Panel.prototype.pluginName).show();
       this._expanded = true;
       this.emit("expanded");
     },
@@ -11479,7 +11479,7 @@ define('skylark-domx-panels/HeaderPanel',[
     collapse : function() {
       // collapse this panel
       this.emit("collapsing");
-      this.$body.plugin("domx.collapse").hide();
+      this.$body.plugin(Panel.prototype.pluginName).hide();
       this._expanded = false;
       this.emit("collapsed");
     },
@@ -11532,7 +11532,7 @@ define('skylark-domx-panels/Pagination',[
   var Pagination = plugins.Plugin.inherit({
       klassName : "Pagination",
 
-      pluginName : "domx.pagination",
+      pluginName : "domx.panels.pagination",
 
       options : {
           tagName : "ul",
@@ -11774,6 +11774,739 @@ define('skylark-domx-panels/Pagination',[
 
   return panels.Pagination = Pagination;
 });
+ define('skylark-domx-panels/PanelGroup',[
+  "skylark-langx/langx",
+  "skylark-domx-query",
+  "skylark-domx-velm",
+  "skylark-domx-plugins",
+  "./panels",
+  "./HeaderPanel"
+],function(langx,$,elmx,plugins,panels,HeaderPanel){
+
+  var PanelGroup = plugins.Plugin.inherit({
+    klassName : "PanelGroup",
+
+    pluginName : "domx.panels.panelGroup",
+
+    options : {
+      panel: {
+        selector : "> .panel",
+        template : null,
+      }
+    },
+
+     _construct : function(elm,options) {
+      this.overrided(elm,options);
+      this._velm = this.elmx();
+      var panels = [];
+      this._velm.$(this.options.panel.selector).forEach((panelEl) => {
+        var panel = new PanelGroup.Panel(panelEl,{
+          group : this
+        });
+        panels.push(panel);
+      });
+      this._panels = panels;
+    },
+
+    panels : {
+      get : function() {
+
+      }
+    },
+
+
+    addPanel : function() {
+
+    },
+
+    /**
+     * Removes a group pane.
+     *
+     * @method remove
+     * @return {Accordion} The current widget.
+     */
+    remove : function() {
+
+    },
+
+    /**
+     * Expands a group pane.
+     *
+     * @method remove
+     * @return {Accordion} The current widget.
+     */
+    expand : function() {
+      // expand a panel
+
+    },
+
+    /**
+     * Expands all group panes.
+     *
+     * @method expandAll
+     * @return {Accordion} The current widget.
+     */
+    expandAll : function() {
+      // expand a panel
+
+    },
+
+    /**
+     * Collapse a group pane.
+     *
+     * @method collapse
+     * @return {Accordion} The current widget.
+     */
+    collapse : function() {
+
+    },
+
+    /**
+     * Collapses all group pane.
+     *
+     * @method collapseAll
+     * @return {Accordion} The current widget.
+     */
+    collapseAll : function() {
+
+    }
+  });
+
+  PanelGroup.Panel = HeaderPanel.inherit({
+    klassName : "AccordionPanel",
+
+    expand : function() {
+      if (this.options.group.active) {
+        this.options.group.active.collapse();
+      }
+      this.overrided();
+      this.options.group.active = this;
+    },
+
+    collapse : function() {
+      this.overrided();
+      this.options.group.active = null;
+    },
+
+    toggle : function() {
+      this.overrided();
+    },
+
+    remove : function() {
+      this.overrided();
+    }
+
+  });
+
+  plugins.register(PanelGroup);
+
+  return panels.PanelGroup = PanelGroup;
+});
+
+define('skylark-domx-popups/popups',[
+	"skylark-langx-ns"
+],function(skylark){
+
+	var stack = [];
+
+
+
+    /**
+    * get the offset below/above and left/right element depending on screen position
+    * Thanks https://github.com/jquery/jquery-ui/blob/master/ui/jquery.ui.datepicker.js
+    */
+    function around(ref) {
+        var extraY = 0;
+        var dpSize = geom.size(popup);
+        var dpWidth = dpSize.width;
+        var dpHeight = dpSize.height;
+        var refHeight = geom.height(ref);
+        var doc = ref.ownerDocument;
+        var docElem = doc.documentElement;
+        var viewWidth = docElem.clientWidth + geom.scrollLeft(doc);
+        var viewHeight = docElem.clientHeight + geom.scrollTop(doc);
+        var offset = geom.pagePosition(ref);
+        var offsetLeft = offset.left;
+        var offsetTop = offset.top;
+
+        offsetTop += refHeight;
+
+        offsetLeft -=
+            Math.min(offsetLeft, (offsetLeft + dpWidth > viewWidth && viewWidth > dpWidth) ?
+            Math.abs(offsetLeft + dpWidth - viewWidth) : 0);
+
+        offsetTop -=
+            Math.min(offsetTop, ((offsetTop + dpHeight > viewHeight && viewHeight > dpHeight) ?
+            Math.abs(dpHeight + refHeight - extraY) : extraY));
+
+        return {
+            top: offsetTop,
+            bottom: offset.bottom,
+            left: offsetLeft,
+            right: offset.right,
+            width: offset.width,
+            height: offset.height
+        };
+    }
+
+
+	/*
+	 * Popup the ui elment at the specified position
+	 * @param popup  element to display
+	 * @param options
+	 *  - around {HtmlEleent}
+	 *  - at {x,y}
+	 *  - parent {}
+	 */
+
+	function open(popup,options) {
+		if (options.around) {
+			//A DOM node that should be used as a reference point for placing the pop-up. 
+		}
+
+	}
+
+	/*
+	 * Close specified popup and any popups that it parented.
+	 * If no popup is specified, closes all popups.
+     */
+	function close(popup) {
+		var count = 0;
+
+		if (popup) {
+			for (var i= stack.length-1; i>=0; i--) {
+				if (stack[i].popup == popup) {
+					count = stack.length - i; 
+					break;
+				}
+			}
+		} else {
+			count = stack.length;
+		}
+		for (var i=0; i<count ; i++ ) {
+			var top = stack.pop(),
+				popup1 = top.popup;
+			if (popup1.hide) {
+				popup1.hide();
+			} else {
+
+			}
+
+		} 
+	}
+	return skylark.attach("domx.popups",{
+		around,
+		open,
+		close
+	});
+});
+define('skylark-domx-popups/Dropdown',[
+  "skylark-langx/langx",
+  "skylark-domx-browser",
+  "skylark-domx-eventer",
+  "skylark-domx-noder",
+  "skylark-domx-geom",
+  "skylark-domx-query",
+  "skylark-domx-plugins",
+  "./popups"
+],function(langx,browser,eventer,noder,geom,$,plugins,popups){
+
+  'use strict';
+
+  // DROPDOWN CLASS DEFINITION
+  // =========================
+
+  var backdrop = '.dropdown-backdrop';
+  var toggle   = '[data-toggle="dropdown"]';
+
+  var Dropdown = plugins.Plugin.inherit({
+    klassName: "Dropdown",
+
+    pluginName : "domx.dropdown",
+
+    options : {
+      "selectors" : {
+        "toggler" : '[data-toggle="dropdown"],.dropdown-menu'
+      }
+
+    },
+
+    _construct : function(elm,options) {
+      this.overrided(elm,options);
+
+      var $el = this.$element = $(this._elm);
+      $el.on('click.dropdown', this.toggle);
+      $el.on('keydown.dropdown', this.options.selectors.toggler,this.keydown);
+    },
+
+    toggle : function (e) {
+      var $this = $(this)
+
+      if ($this.is('.disabled, :disabled')) {
+        return;
+      }
+
+      var $parent  = getParent($this)
+      var isActive = $parent.hasClass('open');
+
+      clearMenus()
+
+      if (!isActive) {
+        if ('ontouchstart' in document.documentElement && !$parent.closest('.navbar-nav').length) {
+          // if mobile we use a backdrop because click events don't delegate
+          $(document.createElement('div'))
+            .addClass('dropdown-backdrop')
+            .insertAfter($(this))
+            .on('click', clearMenus)
+        }
+
+        var relatedTarget = { relatedTarget: this }
+        $parent.trigger(e = eventer.create('show.dropdown', relatedTarget))
+
+        if (e.isDefaultPrevented()) {
+          return;
+        }
+
+        $this
+          .trigger('focus')
+          .attr('aria-expanded', 'true')
+
+        $parent
+          .toggleClass('open')
+          .trigger(eventer.create('shown.dropdown', relatedTarget))
+      }
+
+      return false
+    },
+
+    keydown : function (e) {
+      if (!/(38|40|27|32)/.test(e.which) || /input|textarea/i.test(e.target.tagName)) {
+        return;
+      }
+
+      var $this = $(this);
+
+      e.preventDefault()
+      e.stopPropagation()
+
+      if ($this.is('.disabled, :disabled')) {
+        return;
+      }
+
+      var $parent  = getParent($this)
+      var isActive = $parent.hasClass('open')
+
+      if (!isActive && e.which != 27 || isActive && e.which == 27) {
+        if (e.which == 27) $parent.find(toggle).trigger('focus')
+        return $this.trigger('click')
+      }
+
+      var desc = ' li:not(.disabled):visible a'
+      var $items = $parent.find('.dropdown-menu' + desc)
+
+      if (!$items.length) return
+
+      var index = $items.index(e.target)
+
+      if (e.which == 38 && index > 0)                 index--         // up
+      if (e.which == 40 && index < $items.length - 1) index++         // down
+      if (!~index)                                    index = 0
+
+      $items.eq(index).trigger('focus');
+    }
+
+  });
+
+  function getParent($this) {
+    var selector = $this.attr('data-target')
+
+    if (!selector) {
+      selector = $this.attr('href')
+      selector = selector && /#[A-Za-z]/.test(selector) && selector.replace(/.*(?=#[^\s]*$)/, '') // strip for ie7
+    }
+
+    var $parent = selector && $(selector);
+
+    return $parent && $parent.length ? $parent : $this.parent();
+  }
+
+  function clearMenus(e) {
+    if (e && e.which === 3) return
+    $(backdrop).remove()
+    $(toggle).each(function () {
+      var $this         = $(this)
+      var $parent       = getParent($this)
+      var relatedTarget = { relatedTarget: this }
+
+      if (!$parent.hasClass('open')) return
+
+      if (e && e.type == 'click' && /input|textarea/i.test(e.target.tagName) && noder.contains($parent[0], e.target)) return
+
+      $parent.trigger(e = eventer.create('hide.dropdown', relatedTarget))
+
+      if (e.isDefaultPrevented()) return
+
+      $this.attr('aria-expanded', 'false')
+      $parent.removeClass('open').trigger(eventer.create('hidden.dropdown', relatedTarget))
+    })
+  }
+
+
+
+  // APPLY TO STANDARD DROPDOWN ELEMENTS
+  // ===================================
+  $(document)
+    .on('click.dropdown.data-api', clearMenus)
+    .on('click.dropdown.data-api', '.dropdown form', function (e) { e.stopPropagation() });
+
+  plugins.register(Dropdown);
+
+  return popups.Dropdown = Dropdown;
+
+});
+
+define('skylark-domx-toggles/toggles',[
+	"skylark-langx/skylark"
+],function(skylark){
+	return skylark.attach("domx.toggles",{});
+});
+define('skylark-domx-toggles/TabButton',[
+  "skylark-langx/langx",
+  "skylark-domx-browser",
+  "skylark-domx-eventer",
+  "skylark-domx-noder",
+  "skylark-domx-geom",
+  "skylark-domx-query",
+  "skylark-domx-plugins",
+  "./toggles"
+],function(langx,browser,eventer,noder,geom,$,plugins,toggles){
+
+  'use strict';
+
+  // TAB CLASS DEFINITION
+  // ====================
+
+
+  var TabButton =  plugins.Plugin.inherit({
+    klassName: "TabButton",
+
+    pluginName : "domx.toggles.tabButton",
+
+    _construct : function(element,options) {
+      // jscs:disable requireDollarBeforejQueryAssignment
+      this.element = $(element)
+      this.target = options && options.target;
+
+      // jscs:enable requireDollarBeforejQueryAssignment
+      this.element.on("click.domx.toggles.tabButton",langx.proxy(function(e){
+        e.preventDefault()
+        this.show();
+      },this));    
+    },
+
+    show : function () {
+      var $this    = this.element
+      var $ul      = $this.closest('ul:not(.dropdown-menu)')
+      var selector = this.target || $this.data('target');
+
+      if (!selector) {
+        selector = $this.attr('href')
+        selector = selector && selector.replace(/.*(?=#[^\s]*$)/, '') // strip for ie7
+      }
+
+      if ($this.parent('li').hasClass('active')) return
+
+      var $previous = $ul.find('.active:last a')
+      var hideEvent = eventer.create('hide.bs.tab', {
+        relatedTarget: $this[0]
+      })
+      var showEvent = eventer.create('show.bs.tab', {
+        relatedTarget: $previous[0]
+      })
+
+      $previous.trigger(hideEvent)
+      $this.trigger(showEvent)
+
+      if (showEvent.isDefaultPrevented() || hideEvent.isDefaultPrevented()) return
+
+      var $target = $(selector)
+
+      this.activate($this.closest('li'), $ul)
+      this.activate($target, $target.parent(), function () {
+        $previous.trigger({
+          type: 'hidden.bs.tab',
+          relatedTarget: $this[0]
+        })
+        $this.trigger({
+          type: 'shown.bs.tab',
+          relatedTarget: $previous[0]
+        })
+      })
+    },
+
+    activate : function (element, container, callback) {
+      var $active    = container.find('> .active')
+      var transition = callback
+        && browser.support.transition
+        && ($active.length && $active.hasClass('fade') || !!container.find('> .fade').length)
+
+      function next() {
+        $active
+          .removeClass('active')
+          .find('> .dropdown-menu > .active')
+            .removeClass('active')
+          .end()
+          .find('[data-toggle="tab"]')
+            .attr('aria-expanded', false)
+
+        element
+          .addClass('active')
+          .find('[data-toggle="tab"]')
+            .attr('aria-expanded', true)
+
+        if (transition) {
+          element[0].offsetWidth // reflow for transition
+          element.addClass('in')
+        } else {
+          element.removeClass('fade')
+        }
+
+        if (element.parent('.dropdown-menu').length) {
+          element
+            .closest('li.dropdown')
+              .addClass('active')
+            .end()
+            .find('[data-toggle="tab"]')
+              .attr('aria-expanded', true)
+        }
+
+        callback && callback()
+      }
+
+      $active.length && transition ?
+        $active
+          .one('transitionEnd', next)
+          .emulateTransitionEnd(TabButton.TRANSITION_DURATION) :
+        next()
+
+      $active.removeClass('in')
+    }
+
+
+  });
+
+
+  TabButton.TRANSITION_DURATION = 150
+
+
+  plugins.register(TabButton);
+
+  return toggles.TabButton = TabButton;
+});
+
+define('skylark-domx-panels/TabStrip',[
+    "skylark-langx/langx",
+    "skylark-domx-browser",
+    "skylark-domx-eventer",
+    "skylark-domx-noder",
+    "skylark-domx-geom",
+    "skylark-domx-query",
+    "skylark-domx-plugins",
+    "skylark-domx-popups/Dropdown",
+    "skylark-domx-toggles/TabButton",
+    "./panels",
+], function(langx, browser, eventer, noder, geom,  $, plugins,Dropdown, TabButton,panels) {
+
+    var TabStrip = plugins.Plugin.inherit({
+        klassName : "TabStrip",
+        pluginName : "domx.panels.tabstrip",
+
+        options : {
+          selectors : {
+            header : ".nav-tabs",
+            tab : "[data-toggle=\"tab\"]",
+            content : ".tab-content",
+            tabpane : ".tab-pane"
+          },
+
+          droptabs : {
+            selectors : {
+              dropdown : "li.droptabs",
+              dropdownMenu    : "ul.dropdown-menu",
+              dropdownTabs    : "li",
+              dropdownCaret   : "b.caret",
+              visibleTabs     : ">li:not(.dropdown)",
+            },
+            auto              : true,
+            pullDropdownRight : true,
+
+
+          }
+        },
+
+     _construct : function(elm,options) {
+          this.overrided(elm,options);
+          this._velm = this.elmx();
+          this.$header = this._velm.$(this.options.selectors.header); 
+          this.$tabs = this.$header.find(this.options.selectors.tab);
+          this.$content = this._velm.$(this.options.selectors.content);
+          this.$tabpanes = this.$content.find(this.options.selectors.tabpane);
+
+          this.$header.find('[data-toggle="dropdown"]').plugin(Dropdown.prototype.pluginName);
+
+          var self = this;
+          this.$tabs.each(function(idx,tabEl){
+            $(tabEl).plugin(TabButton.prototype.pluginName, {
+              target : self.$tabpanes[idx]
+            });
+          });
+
+        },
+
+        arrange : function () {
+
+          var dropdownTabsSelector = this.options.droptabs.selectors.dropdownTabs,
+              visibleTabsSelector = this.options.droptabs.selectors.visibleTabs;
+
+              $container = this.$header;
+          var dropdown = $container.find(this.options.droptabs.selectors.dropdown);
+          var dropdownMenu = dropdown.find(this.options.droptabs.selectors.dropdownMenu);
+          var dropdownLabel = $('>a', dropdown).clone();
+          var dropdownCaret = $(this.options.droptabs.selectors.dropdownCaret, dropdown);
+
+          // We only want the default label, strip the caret out
+          $(this.options.droptabs.selectors.dropdownCaret, dropdownLabel).remove();
+
+          if (this.options.droptabs.pullDropdownRight) {
+            $(dropdown).addClass('pull-right');
+          }
+
+          var $dropdownTabs = function () {
+            return $(dropdownTabsSelector, dropdownMenu);
+          }
+
+          var $visibleTabs = function () {
+            return $(visibleTabsSelector, $container);
+          }
+
+          function getFirstHiddenElementWidth() {
+            var tempElem=$dropdownTabs().first().clone().appendTo($container).css("position","fixed");
+            var hiddenElementWidth = $(tempElem).outerWidth();
+            $(tempElem).remove();
+            return hiddenElementWidth;
+          }
+
+          function getHiddenElementWidth(elem) {
+            var tempElem=$(elem).clone().appendTo($container).css("position","fixed");
+            var hiddenElementWidth = $(tempElem).outerWidth();
+            $(tempElem).remove();
+            return hiddenElementWidth;
+          }
+
+          function getDropdownLabel() {
+            var labelText = 'Dropdown';
+            if ($(dropdown).hasClass('active')) {
+              labelText = $('>li.active>a', dropdownMenu).html();
+            } else if (dropdownLabel.html().length > 0) {
+              labelText = dropdownLabel.html();
+            }
+
+            labelText = $.trim(labelText);
+
+            if (labelText.length > 10) {
+              labelText = labelText.substring(0, 10) + '...';
+            }
+
+            return labelText;
+          }
+
+          function renderDropdownLabel() {
+            $('>a', dropdown).html(getDropdownLabel() + ' ' + dropdownCaret.prop('outerHTML'));
+          }
+
+          function manageActive(elem) {
+            //fixes a bug where Bootstrap can't remove the 'active' class on elements after they've been hidden inside the dropdown
+            $('a', $(elem)).on('show.bs.tab', function (e) {
+              $(e.relatedTarget).parent().removeClass('active');
+            })
+            $('a', $(elem)).on('shown.bs.tab', function (e) {
+              renderDropdownLabel();
+            })
+
+          }
+
+          function checkDropdownSelection() {
+            if ($($dropdownTabs()).filter('.active').length > 0) {
+              $(dropdown).addClass('active');
+            } else {
+              $(dropdown).removeClass('active');
+            }
+
+            renderDropdownLabel();
+          }
+
+
+          var visibleTabsWidth = function () {
+            var visibleTabsWidth = 0;
+            $($visibleTabs()).each(function( index ) {
+              visibleTabsWidth += parseInt($(this).outerWidth(), 10);
+            });
+            visibleTabsWidth = visibleTabsWidth + parseInt($(dropdown).outerWidth(), 10);
+            return visibleTabsWidth;
+          }
+
+          var availableSpace = function () {
+            return $container.outerWidth()-visibleTabsWidth();
+          }
+
+          if (availableSpace()<0) {//we will hide tabs here
+            var x = availableSpace();
+            $($visibleTabs().get().reverse()).each(function( index ){
+              if (!($(this).hasClass('always-visible'))){
+                  $(this).prependTo(dropdownMenu);
+                  x=x+$(this).outerWidth();
+              }
+              if (x>=0) {return false;}
+            });
+          }
+
+          if (availableSpace()>getFirstHiddenElementWidth()) { //and here we bring the tabs out
+            var x = availableSpace();
+            $($dropdownTabs()).each(function( index ){
+              if (getHiddenElementWidth(this) < x && !($(this).hasClass('always-dropdown'))){
+                $(this).appendTo($container);
+                x = x-$(this).outerWidth();
+              } else {return false;}
+             });
+
+            if (!this.options.droptabs.pullDropdownRight && !$(dropdown).is(':last-child')) {
+              // If not pulling-right, keep the dropdown at the end of the container.
+              $(dropdown).detach().insertAfter($container.find('li:last-child'));
+            }
+          }
+
+          if ($dropdownTabs().length <= 0) {
+            dropdown.hide();
+          } else {
+            dropdown.show();
+          }
+        },
+
+        add : function() {
+          //TODO
+        },
+
+        remove : function(){
+          //TODO
+        }
+    });
+
+    plugins.register(TabStrip);
+
+
+    return panels.TabStrip = TabStrip;
+
+});
 define('skylark-domx-panels/Wizard',[
   "skylark-langx/langx",
   "skylark-domx-browser",
@@ -11789,7 +12522,7 @@ define('skylark-domx-panels/Wizard',[
 	var Wizard = plugins.Plugin.inherit({
 		klassName: "Wizard",
 
-	    pluginName : "domx.wizard",
+	    pluginName : "domx.panels.wizard",
 
 	    options : {
 			disablePreviousStep: false,
@@ -12174,6 +12907,8 @@ define('skylark-domx-panels/main',[
     "./HeaderPanel",
     "./Pagination",
     "./Panel",
+    "./PanelGroup",
+    "./TabStrip",
     "./Wizard"
 ], function(panels) {
     return panels;

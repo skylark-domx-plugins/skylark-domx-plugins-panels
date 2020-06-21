@@ -13,7 +13,7 @@ define([
 	var Wizard = plugins.Plugin.inherit({
 		klassName: "Wizard",
 
-	    pluginName : "domx.wizard",
+	    pluginName : "domx.panels.wizard",
 
 	    options : {
 			disablePreviousStep: false,

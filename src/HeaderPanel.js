@@ -40,7 +40,7 @@ define([
     expand : function() {
       // expand this panel
       this.emit("expanding");
-      this.$body.plugin("domx.collapse").show();
+      this.$body.plugin(Panel.prototype.pluginName).show();
       this._expanded = true;
       this.emit("expanded");
     },
@@ -48,7 +48,7 @@ define([
     collapse : function() {
       // collapse this panel
       this.emit("collapsing");
-      this.$body.plugin("domx.collapse").hide();
+      this.$body.plugin(Panel.prototype.pluginName).hide();
       this._expanded = false;
       this.emit("collapsed");
     },

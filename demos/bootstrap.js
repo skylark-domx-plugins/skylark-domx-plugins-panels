@@ -182,8 +182,13 @@ requirejs.config({
             main: 'main'
          },
          {
-           name : "skylark-domx-transforms",
-           location : "../node_modules/skylark-domx-transforms/dist/uncompressed/skylark-domx-transforms",
+           name : "skylark-domx-tables",
+           location : "../node_modules/skylark-domx-tables/dist/uncompressed/skylark-domx-tables",
+            main: 'main'
+         },         
+         {
+           name : "skylark-domx-toggles",
+           location : "../node_modules/skylark-domx-toggles/dist/uncompressed/skylark-domx-toggles",
             main: 'main'
          },
          {
