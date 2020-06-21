@@ -11449,7 +11449,7 @@ define('skylark-domx-panels/Panel',[
   var Panel = plugins.Plugin.inherit({
     klassName : "Panel",
 
-    pluginName : "domx.pandels.panel",
+    pluginName : "domx.panels.panel",
 
     options : {
       toggler : {

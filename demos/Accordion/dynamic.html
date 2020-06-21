@@ -113,7 +113,7 @@ var initPage = function ($) {
 				 '<div id="collapse'+ counter +'" class="panel-collapse collapse '+expandedClass+'"role="tabpanel" aria-labelledby="heading'+ counter +'">'+
 				 '<div class="panel-body"><div id="TextBoxDiv'+ counter +'"></div><a class="btn btn-xs btn-primary" accesskey="'+ counter +'" id="addButton3" ><span class="glyphicon glyphicon-plus"></span> Add New Attributes</a>' +
 				 '<a class="btn btn-xs btn-success" accesskey="'+ counter +'" id="ajax_submit_button" >Done</a></div></div></div></div>');
-			$("#panel"+counter).plugin("domx.panel");
+			$("#panel"+counter).plugin("domx.panels.panel");
 			counter++;
 
 		}
@@ -146,7 +146,7 @@ var initPage = function ($) {
 				 '<a class="btn btn-xs btn-success" accesskey="'+ counter +'" id="ajax_submit_button" >Done</a></div></div></div></div>');
 			
 			x++;
-			$("#panel"+counter).plugin("lark.panel");
+			$("#panel"+counter).plugin("domx.panels.panel");
 			counter++;
 		}
 		
