@@ -150,7 +150,7 @@ define('skylark-domx-panels/panels',[
 
 });
 
-define('skylark-domx-panels/Collapse',[
+define('skylark-domx-panels/Panel',[
     "skylark-langx/langx",
     "skylark-domx-browser",
     "skylark-domx-eventer",
@@ -165,10 +165,10 @@ define('skylark-domx-panels/Collapse',[
   // COLLAPSE PUBLIC CLASS DEFINITION
   // ================================
 
-  var Collapse =  plugins.Plugin.inherit({
-    klassName: "Collapse",
+  var Panel =  plugins.Plugin.inherit({
+    klassName: "Panel",
 
-    pluginName : "domx.collapse",
+    pluginName : "domx.panels.panel",
 
     options : {
       toggle: true
@@ -251,7 +251,7 @@ define('skylark-domx-panels/Collapse',[
 
       this.$element
         .one('transitionEnd', langx.proxy(complete, this))
-        .emulateTransitionEnd(Collapse.TRANSITION_DURATION)[dimension](this.$element[0][scrollSize]);
+        .emulateTransitionEnd(Panel.TRANSITION_DURATION)[dimension](this.$element[0][scrollSize]);
     },
 
     hide : function () {
@@ -295,7 +295,7 @@ define('skylark-domx-panels/Collapse',[
       this.$element
         [dimension](0)
         .one('transitionEnd', langx.proxy(complete, this))
-        .emulateTransitionEnd(Collapse.TRANSITION_DURATION)
+        .emulateTransitionEnd(Panel.TRANSITION_DURATION)
     },
 
     toggle : function () {
@@ -324,7 +324,7 @@ define('skylark-domx-panels/Collapse',[
     */
   });
 
-  Collapse.TRANSITION_DURATION = 350;
+  Panel.TRANSITION_DURATION = 350;
 
   /*
   function getTargetFromTrigger($trigger) {
@@ -336,13 +336,13 @@ define('skylark-domx-panels/Collapse',[
   }
   */
 
-  plugins.register(Collapse);
+  plugins.register(Panel);
 
-  return panels.Collapse = Collapse;
+  return panels.Panel = Panel;
 
 });
 
-define('skylark-domx-panels/Panel',[
+define('skylark-domx-panels/HeaderPanel',[
   "skylark-langx/langx",
   "skylark-domx-browser",
   "skylark-domx-eventer",
@@ -351,13 +351,13 @@ define('skylark-domx-panels/Panel',[
   "skylark-domx-query",
   "skylark-domx-plugins",
   "./panels",
-  "./Collapse"
-],function(langx,browser,eventer,noder,geom,$,plugins,panels,Collapse){
+  "./Panel"
+],function(langx,browser,eventer,noder,geom,$,plugins,panels,Panel){
 
-  var Panel = plugins.Plugin.inherit({
-    klassName : "Panel",
+  var HeaderPanel = plugins.Plugin.inherit({
+    klassName : "HeaderPanel",
 
-    pluginName : "domx.panel",
+    pluginName : "domx.pandels.headerPanel",
 
     options : {
       toggler : {
@@ -424,151 +424,11 @@ define('skylark-domx-panels/Panel',[
 
   });
 
-  plugins.register(Panel);
+  plugins.register(HeaderPanel);
 
-  return Panel;
+  return HeaderPanel;
 
 });
-define('skylark-domx-panels/Accordion',[
-  "skylark-langx/langx",
-  "skylark-domx-browser",
-  "skylark-domx-eventer",
-  "skylark-domx-noder",
-  "skylark-domx-geom",
-  "skylark-domx-query",
-  "skylark-domx-plugins",
-  "./panels",
-  "./Collapse",
-  "./Panel"
-],function(langx,browser,eventer,noder,geom,$,plugins,panels,Collapse,Panel){
-
-  var Accordion = plugins.Plugin.inherit({
-    klassName : "Accordion",
-
-    pluginName : "domx.accordion",
-
-    options : {
-      panel: {
-        selector : "> .panel",
-        template : null,
-      }
-    },
-
-     _construct : function(elm,options) {
-      this.overrided(elm,options);
-      this._velm = this.elmx();
-      var panels = [];
-      this._velm.$(this.options.panel.selector).forEach((panelEl) => {
-        var panel = new Accordion.Panel(panelEl,{
-          accordion : this
-        });
-        panels.push(panel);
-      });
-      this._panels = panels;
-    },
-
-    _post : function() {
-      // handle internal events
-    },
-
-    _refresh : function(updates) {
-    },
-
-    panels : {
-      get : function() {
-
-      }
-    },
-
-
-    addPanel : function() {
-
-    },
-
-    /**
-     * Removes a accordion pane.
-     *
-     * @method remove
-     * @return {Accordion} The current widget.
-     */
-    remove : function() {
-
-    },
-
-    /**
-     * Expands a accordion pane.
-     *
-     * @method remove
-     * @return {Accordion} The current widget.
-     */
-    expand : function() {
-      // expand a panel
-
-    },
-
-    /**
-     * Expands all accordion panes.
-     *
-     * @method expandAll
-     * @return {Accordion} The current widget.
-     */
-    expandAll : function() {
-      // expand a panel
-
-    },
-
-    /**
-     * Collapse a accordion pane.
-     *
-     * @method collapse
-     * @return {Accordion} The current widget.
-     */
-    collapse : function() {
-
-    },
-
-    /**
-     * Collapses all accordion pane.
-     *
-     * @method collapseAll
-     * @return {Accordion} The current widget.
-     */
-    collapseAll : function() {
-
-    }
-  });
-
-  Accordion.Panel = Panel.inherit({
-    klassName : "AccordionPanel",
-
-    expand : function() {
-      if (this.options.accordion.active) {
-        this.options.accordion.active.collapse();
-      }
-      this.overrided();
-      this.options.accordion.active = this;
-    },
-
-    collapse : function() {
-      this.overrided();
-      this.options.accordion.active = null;
-    },
-
-    toggle : function() {
-      this.overrided();
-    },
-
-    remove : function() {
-      this.overrided();
-    }
-
-  });
-
-  plugins.register(Accordion);
-
-  return panels.Accordion = Accordion;
-});
-
 define('skylark-domx-panels/Pagination',[
   "skylark-langx/langx",
   "skylark-domx-browser",
@@ -826,472 +686,6 @@ define('skylark-domx-panels/Pagination',[
 
 
   return panels.Pagination = Pagination;
-});
-define('skylark-domx-panels/Tab',[
-  "skylark-langx/langx",
-  "skylark-domx-browser",
-  "skylark-domx-eventer",
-  "skylark-domx-noder",
-  "skylark-domx-geom",
-  "skylark-domx-query",
-  "skylark-domx-plugins",
-  "./panels"
-],function(langx,browser,eventer,noder,geom,$,plugins,panels){
-
-  'use strict';
-
-  // TAB CLASS DEFINITION
-  // ====================
-
-
-  var Tab =  plugins.Plugin.inherit({
-    klassName: "Tab",
-
-    pluginName : "domx.tab",
-
-    _construct : function(element,options) {
-      // jscs:disable requireDollarBeforejQueryAssignment
-      this.element = $(element)
-      this.target = options && options.target;
-
-      // jscs:enable requireDollarBeforejQueryAssignment
-      this.element.on("click.bs.tab.data-api",langx.proxy(function(e){
-        e.preventDefault()
-        this.show();
-      },this));    
-    },
-
-    show : function () {
-      var $this    = this.element
-      var $ul      = $this.closest('ul:not(.dropdown-menu)')
-      var selector = this.target || $this.data('target');
-
-      if (!selector) {
-        selector = $this.attr('href')
-        selector = selector && selector.replace(/.*(?=#[^\s]*$)/, '') // strip for ie7
-      }
-
-      if ($this.parent('li').hasClass('active')) return
-
-      var $previous = $ul.find('.active:last a')
-      var hideEvent = eventer.create('hide.bs.tab', {
-        relatedTarget: $this[0]
-      })
-      var showEvent = eventer.create('show.bs.tab', {
-        relatedTarget: $previous[0]
-      })
-
-      $previous.trigger(hideEvent)
-      $this.trigger(showEvent)
-
-      if (showEvent.isDefaultPrevented() || hideEvent.isDefaultPrevented()) return
-
-      var $target = $(selector)
-
-      this.activate($this.closest('li'), $ul)
-      this.activate($target, $target.parent(), function () {
-        $previous.trigger({
-          type: 'hidden.bs.tab',
-          relatedTarget: $this[0]
-        })
-        $this.trigger({
-          type: 'shown.bs.tab',
-          relatedTarget: $previous[0]
-        })
-      })
-    },
-
-    activate : function (element, container, callback) {
-      var $active    = container.find('> .active')
-      var transition = callback
-        && browser.support.transition
-        && ($active.length && $active.hasClass('fade') || !!container.find('> .fade').length)
-
-      function next() {
-        $active
-          .removeClass('active')
-          .find('> .dropdown-menu > .active')
-            .removeClass('active')
-          .end()
-          .find('[data-toggle="tab"]')
-            .attr('aria-expanded', false)
-
-        element
-          .addClass('active')
-          .find('[data-toggle="tab"]')
-            .attr('aria-expanded', true)
-
-        if (transition) {
-          element[0].offsetWidth // reflow for transition
-          element.addClass('in')
-        } else {
-          element.removeClass('fade')
-        }
-
-        if (element.parent('.dropdown-menu').length) {
-          element
-            .closest('li.dropdown')
-              .addClass('active')
-            .end()
-            .find('[data-toggle="tab"]')
-              .attr('aria-expanded', true)
-        }
-
-        callback && callback()
-      }
-
-      $active.length && transition ?
-        $active
-          .one('transitionEnd', next)
-          .emulateTransitionEnd(Tab.TRANSITION_DURATION) :
-        next()
-
-      $active.removeClass('in')
-    }
-
-
-  });
-
-
-  Tab.TRANSITION_DURATION = 150
-
-
-  plugins.register(Tab);
-
-  return panels.Tab = Tab;
-});
-
-define('skylark-domx-panels/TabStrip',[
-    "skylark-langx/langx",
-    "skylark-domx-browser",
-    "skylark-domx-eventer",
-    "skylark-domx-noder",
-    "skylark-domx-geom",
-    "skylark-domx-query",
-    "skylark-domx-plugins",
-    "skylark-domx-popups/Dropdown",
-    "./panels",
-    "./Tab"
-], function(langx, browser, eventer, noder, geom,  $, plugins,Dropdown,panels, Tab) {
-
-    var TabStrip = plugins.Plugin.inherit({
-        klassName : "TabStrip",
-        pluginName : "domx.tabstrip",
-
-        options : {
-          selectors : {
-            header : ".nav-tabs",
-            tab : "[data-toggle=\"tab\"]",
-            content : ".tab-content",
-            tabpane : ".tab-pane"
-          },
-
-          droptabs : {
-            selectors : {
-              dropdown : "li.droptabs",
-              dropdownMenu    : "ul.dropdown-menu",
-              dropdownTabs    : "li",
-              dropdownCaret   : "b.caret",
-              visibleTabs     : ">li:not(.dropdown)",
-            },
-            auto              : true,
-            pullDropdownRight : true,
-
-
-          }
-        },
-
-     _construct : function(elm,options) {
-          this.overrided(elm,options);
-          this._velm = this.elmx();
-          this.$header = this._velm.$(this.options.selectors.header); 
-          this.$tabs = this.$header.find(this.options.selectors.tab);
-          this.$content = this._velm.$(this.options.selectors.content);
-          this.$tabpanes = this.$content.find(this.options.selectors.tabpane);
-
-          this.$header.find('[data-toggle="dropdown"]').plugin(Dropdown.prototype.pluginName);
-
-          var self = this;
-          this.$tabs.each(function(idx,tabEl){
-            $(tabEl).plugin(Tab.prototype.pluginName, {
-              target : self.$tabpanes[idx]
-            });
-          });
-
-        },
-
-        arrange : function () {
-
-          var dropdownTabsSelector = this.options.droptabs.selectors.dropdownTabs,
-              visibleTabsSelector = this.options.droptabs.selectors.visibleTabs;
-
-              $container = this.$header;
-          var dropdown = $container.find(this.options.droptabs.selectors.dropdown);
-          var dropdownMenu = dropdown.find(this.options.droptabs.selectors.dropdownMenu);
-          var dropdownLabel = $('>a', dropdown).clone();
-          var dropdownCaret = $(this.options.droptabs.selectors.dropdownCaret, dropdown);
-
-          // We only want the default label, strip the caret out
-          $(this.options.droptabs.selectors.dropdownCaret, dropdownLabel).remove();
-
-          if (this.options.droptabs.pullDropdownRight) {
-            $(dropdown).addClass('pull-right');
-          }
-
-          var $dropdownTabs = function () {
-            return $(dropdownTabsSelector, dropdownMenu);
-          }
-
-          var $visibleTabs = function () {
-            return $(visibleTabsSelector, $container);
-          }
-
-          function getFirstHiddenElementWidth() {
-            var tempElem=$dropdownTabs().first().clone().appendTo($container).css("position","fixed");
-            var hiddenElementWidth = $(tempElem).outerWidth();
-            $(tempElem).remove();
-            return hiddenElementWidth;
-          }
-
-          function getHiddenElementWidth(elem) {
-            var tempElem=$(elem).clone().appendTo($container).css("position","fixed");
-            var hiddenElementWidth = $(tempElem).outerWidth();
-            $(tempElem).remove();
-            return hiddenElementWidth;
-          }
-
-          function getDropdownLabel() {
-            var labelText = 'Dropdown';
-            if ($(dropdown).hasClass('active')) {
-              labelText = $('>li.active>a', dropdownMenu).html();
-            } else if (dropdownLabel.html().length > 0) {
-              labelText = dropdownLabel.html();
-            }
-
-            labelText = $.trim(labelText);
-
-            if (labelText.length > 10) {
-              labelText = labelText.substring(0, 10) + '...';
-            }
-
-            return labelText;
-          }
-
-          function renderDropdownLabel() {
-            $('>a', dropdown).html(getDropdownLabel() + ' ' + dropdownCaret.prop('outerHTML'));
-          }
-
-          function manageActive(elem) {
-            //fixes a bug where Bootstrap can't remove the 'active' class on elements after they've been hidden inside the dropdown
-            $('a', $(elem)).on('show.bs.tab', function (e) {
-              $(e.relatedTarget).parent().removeClass('active');
-            })
-            $('a', $(elem)).on('shown.bs.tab', function (e) {
-              renderDropdownLabel();
-            })
-
-          }
-
-          function checkDropdownSelection() {
-            if ($($dropdownTabs()).filter('.active').length > 0) {
-              $(dropdown).addClass('active');
-            } else {
-              $(dropdown).removeClass('active');
-            }
-
-            renderDropdownLabel();
-          }
-
-
-          var visibleTabsWidth = function () {
-            var visibleTabsWidth = 0;
-            $($visibleTabs()).each(function( index ) {
-              visibleTabsWidth += parseInt($(this).outerWidth(), 10);
-            });
-            visibleTabsWidth = visibleTabsWidth + parseInt($(dropdown).outerWidth(), 10);
-            return visibleTabsWidth;
-          }
-
-          var availableSpace = function () {
-            return $container.outerWidth()-visibleTabsWidth();
-          }
-
-          if (availableSpace()<0) {//we will hide tabs here
-            var x = availableSpace();
-            $($visibleTabs().get().reverse()).each(function( index ){
-              if (!($(this).hasClass('always-visible'))){
-                  $(this).prependTo(dropdownMenu);
-                  x=x+$(this).outerWidth();
-              }
-              if (x>=0) {return false;}
-            });
-          }
-
-          if (availableSpace()>getFirstHiddenElementWidth()) { //and here we bring the tabs out
-            var x = availableSpace();
-            $($dropdownTabs()).each(function( index ){
-              if (getHiddenElementWidth(this) < x && !($(this).hasClass('always-dropdown'))){
-                $(this).appendTo($container);
-                x = x-$(this).outerWidth();
-              } else {return false;}
-             });
-
-            if (!this.options.droptabs.pullDropdownRight && !$(dropdown).is(':last-child')) {
-              // If not pulling-right, keep the dropdown at the end of the container.
-              $(dropdown).detach().insertAfter($container.find('li:last-child'));
-            }
-          }
-
-          if ($dropdownTabs().length <= 0) {
-            dropdown.hide();
-          } else {
-            dropdown.show();
-          }
-        },
-
-        add : function() {
-          //TODO
-        },
-
-        remove : function(){
-          //TODO
-        }
-    });
-
-    plugins.register(TabStrip);
-
-
-    return panels.TabStrip = TabStrip;
-
-});
-define('skylark-domx-panels/Toolbar',[
-  "skylark-langx/langx",
-  "skylark-domx-query",
-  "skylark-domx-plugins",
-  "./panels"
-],function(langx,$,plugins,panels){ 
-
-
-  var Toolbar = plugins.Plugin.inherit({
-    klassName : "Toolbar",
-
-    pluginName : "domx.toolbar",
-
-    options : {
-      toolbarFloat: true,
-      toolbarHidden: false,
-      toolbarFloatOffset: 0,
-      template : '<div class="domx-toolbar"><ul></ul></div>',
-      separator : {
-        template :  '<li><span class="separator"></span></li>'
-      }
-    },
-
-    _construct : function(elm,options) {
-      this.overrided(elm,options);
-      this._velm = this.elmx();
-
-      var floatInitialized, initToolbarFloat, toolbarHeight;
-      //this.editor = editor;
-
-      //this.opts = langx.extend({}, this.opts, opts);
-      this.opts = this.options;
-
-
-      //if (!langx.isArray(this.opts.toolbar)) {
-      //  this.opts.toolbar = ['bold', 'italic', 'underline', 'strikethrough', '|', 'ol', 'ul', 'blockquote', 'code', '|', 'link', 'image', '|', 'indent', 'outdent'];
-      //}
-
-      this.wrapper = $(this._elm);
-      this.list = this.wrapper.find('ul');
-      this.list.on('click', function(e) {
-        return false;
-      });
-      this.wrapper.on('mousedown', (function(_this) {
-        return function(e) {
-          return _this.list.find('.menu-on').removeClass('.menu-on');
-        };
-      })(this));
-      $(document).on('mousedown.toolbar', (function(_this) {
-        return function(e) {
-          return _this.list.find('.menu-on').removeClass('menu-on');
-        };
-      })(this));
-      if (!this.opts.toolbarHidden && this.opts.toolbarFloat) {
-        this.wrapper.css('top', this.opts.toolbarFloatOffset);
-        toolbarHeight = 0;
-        initToolbarFloat = (function(_this) {
-          return function() {
-            _this.wrapper.css('position', 'static');
-            _this.wrapper.width('auto');
-            _this.editor.editable.util.reflow(_this.wrapper);
-            _this.wrapper.width(_this.wrapper.outerWidth());
-            _this.wrapper.css('left', _this.editor.editable.util.os.mobile ? _this.wrapper.position().left : _this.wrapper.offset().left);
-            _this.wrapper.css('position', '');
-            toolbarHeight = _this.wrapper.outerHeight();
-            _this.editor.placeholderEl.css('top', toolbarHeight);
-            return true;
-          };
-        })(this);
-        floatInitialized = null;
-
-        /*
-        $(window).on('resize.richeditor-' + this.editor.id, function(e) {
-          return floatInitialized = initToolbarFloat();
-        });
-        $(window).on('scroll.richeditor-' + this.editor.id, (function(_this) {
-          return function(e) {
-            var bottomEdge, scrollTop, topEdge;
-            if (!_this.wrapper.is(':visible')) {
-              return;
-            }
-            topEdge = _this.editor.wrapper.offset().top;
-            bottomEdge = topEdge + _this.editor.wrapper.outerHeight() - 80;
-            scrollTop = $(document).scrollTop() + _this.opts.toolbarFloatOffset;
-            if (scrollTop <= topEdge || scrollTop >= bottomEdge) {
-              _this.editor.wrapper.removeClass('toolbar-floating').css('padding-top', '');
-              if (_this.editor.editable.util.os.mobile) {
-                return _this.wrapper.css('top', _this.opts.toolbarFloatOffset);
-              }
-            } else {
-              floatInitialized || (floatInitialized = initToolbarFloat());
-              _this.editor.wrapper.addClass('toolbar-floating').css('padding-top', toolbarHeight);
-              if (_this.editor.editable.util.os.mobile) {
-                return _this.wrapper.css('top', scrollTop - topEdge + _this.opts.toolbarFloatOffset);
-              }
-            }
-          };
-        })(this));
-        */
-      }
-
-      /*
-      this.editor.on('destroy', (function(_this) {
-        return function() {
-          return _this.buttons.length = 0;
-        };
-      })(this));
-      */
-
-      
-    },
-
-    addToolItem : function(itemWidget) {
-      $(itemWidget._elm).appendTo(this.list);
-      return this;
-    },
-
-    addSeparator : function() {
-      $(this.options.separator.template).appendTo(this.list);
-      return this;
-    }
-
-  });
-
-  plugins.register(Toolbar);
-
-  return panels.Toolbar = Toolbar;
-
 });
 define('skylark-domx-panels/Wizard',[
   "skylark-langx/langx",
@@ -1690,10 +1084,9 @@ define('skylark-domx-panels/Wizard',[
 
 define('skylark-domx-panels/main',[
     "./panels",
-    "./Accordion",
+    "./HeaderPanel",
     "./Pagination",
-    "./TabStrip",
-    "./Toolbar",
+    "./Panel",
     "./Wizard"
 ], function(panels) {
     return panels;

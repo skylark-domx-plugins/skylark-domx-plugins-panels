@@ -1,9 +1,8 @@
 define([
     "./panels",
-    "./Accordion",
+    "./HeaderPanel",
     "./Pagination",
-    "./TabStrip",
-    "./Toolbar",
+    "./Panel",
     "./Wizard"
 ], function(panels) {
     return panels;
