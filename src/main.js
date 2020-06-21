@@ -1,10 +1,10 @@
 define([
     "./panels",
-    "./HeaderPanel",
+    "./Accordion",
     "./Pagination",
     "./Panel",
-    "./PanelGroup",
     "./TabStrip",
+    "./Toolbar",
     "./Wizard"
 ], function(panels) {
     return panels;

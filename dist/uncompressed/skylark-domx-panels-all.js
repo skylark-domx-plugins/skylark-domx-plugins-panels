@@ -11237,14 +11237,19 @@ define('skylark-domx-plugins/main',[
 });
 define('skylark-domx-plugins', ['skylark-domx-plugins/main'], function (main) { return main; });
 
-define('skylark-domx-panels/Panel',[
+define('skylark-domx-toggles/toggles',[
+	"skylark-langx/skylark"
+],function(skylark){
+	return skylark.attach("domx.toggles",{});
+});
+define('skylark-domx-toggles/Collapsable',[
     "skylark-langx/langx",
     "skylark-domx-browser",
     "skylark-domx-eventer",
     "skylark-domx-query",
     "skylark-domx-plugins",
-    "./panels"
-], function(langx, browser, eventer,  $, plugins, panels) {
+    "./toggles"
+], function(langx, browser, eventer,  $, plugins, toggles) {
 
 
   'use strict';
@@ -11252,10 +11257,10 @@ define('skylark-domx-panels/Panel',[
   // COLLAPSE PUBLIC CLASS DEFINITION
   // ================================
 
-  var Panel =  plugins.Plugin.inherit({
-    klassName: "Panel",
+  var Collapsable =  plugins.Plugin.inherit({
+    klassName: "Collapsable",
 
-    pluginName : "domx.panels.panel",
+    pluginName : "domx.toggles.collapsable",
 
     options : {
       toggle: true
@@ -11291,7 +11296,7 @@ define('skylark-domx-panels/Panel',[
       }
 
       //var activesData;
-      //var actives = this.$parent && this.$parent.children('.panel').children('.in, .collapsing')
+      //var actives = this.$parent && this.$parent.children('.collapsable').children('.in, .collapsing')
 
       //if (actives && actives.length) {
       //  activesData = actives.data('collapse')
@@ -11338,7 +11343,7 @@ define('skylark-domx-panels/Panel',[
 
       this.$element
         .one('transitionEnd', langx.proxy(complete, this))
-        .emulateTransitionEnd(Panel.TRANSITION_DURATION)[dimension](this.$element[0][scrollSize]);
+        .emulateTransitionEnd(Collapsable.TRANSITION_DURATION)[dimension](this.$element[0][scrollSize]);
     },
 
     hide : function () {
@@ -11382,7 +11387,7 @@ define('skylark-domx-panels/Panel',[
       this.$element
         [dimension](0)
         .one('transitionEnd', langx.proxy(complete, this))
-        .emulateTransitionEnd(Panel.TRANSITION_DURATION)
+        .emulateTransitionEnd(Collapsable.TRANSITION_DURATION)
     },
 
     toggle : function () {
@@ -11411,7 +11416,7 @@ define('skylark-domx-panels/Panel',[
     */
   });
 
-  Panel.TRANSITION_DURATION = 350;
+  Collapsable.TRANSITION_DURATION = 350;
 
   /*
   function getTargetFromTrigger($trigger) {
@@ -11423,13 +11428,13 @@ define('skylark-domx-panels/Panel',[
   }
   */
 
-  plugins.register(Panel);
+  plugins.register(Collapsable);
 
-  return panels.Panel = Panel;
+  return toggles.Collapsable = Collapsable;
 
 });
 
-define('skylark-domx-panels/HeaderPanel',[
+define('skylark-domx-panels/Panel',[
   "skylark-langx/langx",
   "skylark-domx-browser",
   "skylark-domx-eventer",
@@ -11437,14 +11442,14 @@ define('skylark-domx-panels/HeaderPanel',[
   "skylark-domx-geom",
   "skylark-domx-query",
   "skylark-domx-plugins",
+  "skylark-domx-toggles/Collapsable",
   "./panels",
-  "./Panel"
-],function(langx,browser,eventer,noder,geom,$,plugins,panels,Panel){
+],function(langx,browser,eventer,noder,geom,$,plugins,Collapsable,panels){
 
-  var HeaderPanel = plugins.Plugin.inherit({
-    klassName : "HeaderPanel",
+  var Panel = plugins.Plugin.inherit({
+    klassName : "Panel",
 
-    pluginName : "domx.pandels.headerPanel",
+    pluginName : "domx.pandels.panel",
 
     options : {
       toggler : {
@@ -11471,7 +11476,7 @@ define('skylark-domx-panels/HeaderPanel',[
     expand : function() {
       // expand this panel
       this.emit("expanding");
-      this.$body.plugin(Panel.prototype.pluginName).show();
+      this.$body.plugin(Collapsable.prototype.pluginName).show();
       this._expanded = true;
       this.emit("expanded");
     },
@@ -11479,7 +11484,7 @@ define('skylark-domx-panels/HeaderPanel',[
     collapse : function() {
       // collapse this panel
       this.emit("collapsing");
-      this.$body.plugin(Panel.prototype.pluginName).hide();
+      this.$body.plugin(Collapsable.prototype.pluginName).hide();
       this._expanded = false;
       this.emit("collapsed");
     },
@@ -11511,11 +11516,140 @@ define('skylark-domx-panels/HeaderPanel',[
 
   });
 
-  plugins.register(HeaderPanel);
+  plugins.register(Panel);
 
-  return HeaderPanel;
+  return Panel;
 
 });
+ define('skylark-domx-panels/Accordion',[
+  "skylark-langx/langx",
+  "skylark-domx-query",
+  "skylark-domx-velm",
+  "skylark-domx-plugins",
+  "./panels",
+  "./Panel"
+],function(langx,$,elmx,plugins,panels,Panel){
+
+  var Accordion = plugins.Plugin.inherit({
+    klassName : "Accordion",
+
+    pluginName : "domx.panels.accordion",
+
+    options : {
+      panel: {
+        selector : "> .panel",
+        template : null,
+      }
+    },
+
+     _construct : function(elm,options) {
+      this.overrided(elm,options);
+      this._velm = this.elmx();
+      var panels = [];
+      this._velm.$(this.options.panel.selector).forEach((panelEl) => {
+        var panel = new Accordion.Panel(panelEl,{
+          group : this
+        });
+        panels.push(panel);
+      });
+      this._panels = panels;
+    },
+
+    panels : {
+      get : function() {
+
+      }
+    },
+
+
+    addPanel : function() {
+
+    },
+
+    /**
+     * Removes a group pane.
+     *
+     * @method remove
+     * @return {Accordion} The current widget.
+     */
+    remove : function() {
+
+    },
+
+    /**
+     * Expands a group pane.
+     *
+     * @method remove
+     * @return {Accordion} The current widget.
+     */
+    expand : function() {
+      // expand a panel
+
+    },
+
+    /**
+     * Expands all group panes.
+     *
+     * @method expandAll
+     * @return {Accordion} The current widget.
+     */
+    expandAll : function() {
+      // expand a panel
+
+    },
+
+    /**
+     * Collapse a group pane.
+     *
+     * @method collapse
+     * @return {Accordion} The current widget.
+     */
+    collapse : function() {
+
+    },
+
+    /**
+     * Collapses all group pane.
+     *
+     * @method collapseAll
+     * @return {Accordion} The current widget.
+     */
+    collapseAll : function() {
+
+    }
+  });
+
+  Accordion.Panel = Panel.inherit({
+    klassName : "AccordionPanel",
+
+    expand : function() {
+      if (this.options.group.active) {
+        this.options.group.active.collapse();
+      }
+      this.overrided();
+      this.options.group.active = this;
+    },
+
+    collapse : function() {
+      this.overrided();
+      this.options.group.active = null;
+    },
+
+    toggle : function() {
+      this.overrided();
+    },
+
+    remove : function() {
+      this.overrided();
+    }
+
+  });
+
+  plugins.register(Accordion);
+
+  return panels.Accordion = Accordion;
+});
+
 define('skylark-domx-panels/Pagination',[
   "skylark-langx/langx",
   "skylark-domx-browser",
@@ -11774,135 +11908,6 @@ define('skylark-domx-panels/Pagination',[
 
   return panels.Pagination = Pagination;
 });
- define('skylark-domx-panels/PanelGroup',[
-  "skylark-langx/langx",
-  "skylark-domx-query",
-  "skylark-domx-velm",
-  "skylark-domx-plugins",
-  "./panels",
-  "./HeaderPanel"
-],function(langx,$,elmx,plugins,panels,HeaderPanel){
-
-  var PanelGroup = plugins.Plugin.inherit({
-    klassName : "PanelGroup",
-
-    pluginName : "domx.panels.panelGroup",
-
-    options : {
-      panel: {
-        selector : "> .panel",
-        template : null,
-      }
-    },
-
-     _construct : function(elm,options) {
-      this.overrided(elm,options);
-      this._velm = this.elmx();
-      var panels = [];
-      this._velm.$(this.options.panel.selector).forEach((panelEl) => {
-        var panel = new PanelGroup.Panel(panelEl,{
-          group : this
-        });
-        panels.push(panel);
-      });
-      this._panels = panels;
-    },
-
-    panels : {
-      get : function() {
-
-      }
-    },
-
-
-    addPanel : function() {
-
-    },
-
-    /**
-     * Removes a group pane.
-     *
-     * @method remove
-     * @return {Accordion} The current widget.
-     */
-    remove : function() {
-
-    },
-
-    /**
-     * Expands a group pane.
-     *
-     * @method remove
-     * @return {Accordion} The current widget.
-     */
-    expand : function() {
-      // expand a panel
-
-    },
-
-    /**
-     * Expands all group panes.
-     *
-     * @method expandAll
-     * @return {Accordion} The current widget.
-     */
-    expandAll : function() {
-      // expand a panel
-
-    },
-
-    /**
-     * Collapse a group pane.
-     *
-     * @method collapse
-     * @return {Accordion} The current widget.
-     */
-    collapse : function() {
-
-    },
-
-    /**
-     * Collapses all group pane.
-     *
-     * @method collapseAll
-     * @return {Accordion} The current widget.
-     */
-    collapseAll : function() {
-
-    }
-  });
-
-  PanelGroup.Panel = HeaderPanel.inherit({
-    klassName : "AccordionPanel",
-
-    expand : function() {
-      if (this.options.group.active) {
-        this.options.group.active.collapse();
-      }
-      this.overrided();
-      this.options.group.active = this;
-    },
-
-    collapse : function() {
-      this.overrided();
-      this.options.group.active = null;
-    },
-
-    toggle : function() {
-      this.overrided();
-    },
-
-    remove : function() {
-      this.overrided();
-    }
-
-  });
-
-  plugins.register(PanelGroup);
-
-  return panels.PanelGroup = PanelGroup;
-});
-
 define('skylark-domx-popups/popups',[
 	"skylark-langx-ns"
 ],function(skylark){
@@ -12165,11 +12170,6 @@ define('skylark-domx-popups/Dropdown',[
 
 });
 
-define('skylark-domx-toggles/toggles',[
-	"skylark-langx/skylark"
-],function(skylark){
-	return skylark.attach("domx.toggles",{});
-});
 define('skylark-domx-toggles/TabButton',[
   "skylark-langx/langx",
   "skylark-domx-browser",
@@ -12505,6 +12505,135 @@ define('skylark-domx-panels/TabStrip',[
 
 
     return panels.TabStrip = TabStrip;
+
+});
+define('skylark-domx-panels/Toolbar',[
+  "skylark-langx/langx",
+  "skylark-domx-query",
+  "skylark-domx-plugins",
+  "./panels"
+],function(langx,$,plugins,panels){ 
+
+
+  var Toolbar = plugins.Plugin.inherit({
+    klassName : "Toolbar",
+
+    pluginName : "domx.panels.toolbar",
+
+    options : {
+      toolbarFloat: true,
+      toolbarHidden: false,
+      toolbarFloatOffset: 0,
+      template : '<div class="domx-toolbar"><ul></ul></div>',
+      separator : {
+        template :  '<li><span class="separator"></span></li>'
+      }
+    },
+
+    _construct : function(elm,options) {
+      this.overrided(elm,options);
+      this._velm = this.elmx();
+
+      var floatInitialized, initToolbarFloat, toolbarHeight;
+      //this.editor = editor;
+
+      //this.opts = langx.extend({}, this.opts, opts);
+      this.opts = this.options;
+
+
+      //if (!langx.isArray(this.opts.toolbar)) {
+      //  this.opts.toolbar = ['bold', 'italic', 'underline', 'strikethrough', '|', 'ol', 'ul', 'blockquote', 'code', '|', 'link', 'image', '|', 'indent', 'outdent'];
+      //}
+
+      this.wrapper = $(this._elm);
+      this.list = this.wrapper.find('ul');
+      this.list.on('click', function(e) {
+        return false;
+      });
+      this.wrapper.on('mousedown', (function(_this) {
+        return function(e) {
+          return _this.list.find('.menu-on').removeClass('.menu-on');
+        };
+      })(this));
+      $(document).on('mousedown.toolbar', (function(_this) {
+        return function(e) {
+          return _this.list.find('.menu-on').removeClass('menu-on');
+        };
+      })(this));
+      if (!this.opts.toolbarHidden && this.opts.toolbarFloat) {
+        this.wrapper.css('top', this.opts.toolbarFloatOffset);
+        toolbarHeight = 0;
+        initToolbarFloat = (function(_this) {
+          return function() {
+            _this.wrapper.css('position', 'static');
+            _this.wrapper.width('auto');
+            _this.editor.editable.util.reflow(_this.wrapper);
+            _this.wrapper.width(_this.wrapper.outerWidth());
+            _this.wrapper.css('left', _this.editor.editable.util.os.mobile ? _this.wrapper.position().left : _this.wrapper.offset().left);
+            _this.wrapper.css('position', '');
+            toolbarHeight = _this.wrapper.outerHeight();
+            _this.editor.placeholderEl.css('top', toolbarHeight);
+            return true;
+          };
+        })(this);
+        floatInitialized = null;
+
+        /*
+        $(window).on('resize.richeditor-' + this.editor.id, function(e) {
+          return floatInitialized = initToolbarFloat();
+        });
+        $(window).on('scroll.richeditor-' + this.editor.id, (function(_this) {
+          return function(e) {
+            var bottomEdge, scrollTop, topEdge;
+            if (!_this.wrapper.is(':visible')) {
+              return;
+            }
+            topEdge = _this.editor.wrapper.offset().top;
+            bottomEdge = topEdge + _this.editor.wrapper.outerHeight() - 80;
+            scrollTop = $(document).scrollTop() + _this.opts.toolbarFloatOffset;
+            if (scrollTop <= topEdge || scrollTop >= bottomEdge) {
+              _this.editor.wrapper.removeClass('toolbar-floating').css('padding-top', '');
+              if (_this.editor.editable.util.os.mobile) {
+                return _this.wrapper.css('top', _this.opts.toolbarFloatOffset);
+              }
+            } else {
+              floatInitialized || (floatInitialized = initToolbarFloat());
+              _this.editor.wrapper.addClass('toolbar-floating').css('padding-top', toolbarHeight);
+              if (_this.editor.editable.util.os.mobile) {
+                return _this.wrapper.css('top', scrollTop - topEdge + _this.opts.toolbarFloatOffset);
+              }
+            }
+          };
+        })(this));
+        */
+      }
+
+      /*
+      this.editor.on('destroy', (function(_this) {
+        return function() {
+          return _this.buttons.length = 0;
+        };
+      })(this));
+      */
+
+      
+    },
+
+    addToolItem : function(itemWidget) {
+      $(itemWidget._elm).appendTo(this.list);
+      return this;
+    },
+
+    addSeparator : function() {
+      $(this.options.separator.template).appendTo(this.list);
+      return this;
+    }
+
+  });
+
+  plugins.register(Toolbar);
+
+  return panels.Toolbar = Toolbar;
 
 });
 define('skylark-domx-panels/Wizard',[
@@ -12904,11 +13033,11 @@ define('skylark-domx-panels/Wizard',[
 
 define('skylark-domx-panels/main',[
     "./panels",
-    "./HeaderPanel",
+    "./Accordion",
     "./Pagination",
     "./Panel",
-    "./PanelGroup",
     "./TabStrip",
+    "./Toolbar",
     "./Wizard"
 ], function(panels) {
     return panels;

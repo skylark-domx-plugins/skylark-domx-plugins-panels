@@ -1,191 +1,87 @@
 define([
-    "skylark-langx/langx",
-    "skylark-domx-browser",
-    "skylark-domx-eventer",
-    "skylark-domx-query",
-    "skylark-domx-plugins",
-    "./panels"
-], function(langx, browser, eventer,  $, plugins, panels) {
+  "skylark-langx/langx",
+  "skylark-domx-browser",
+  "skylark-domx-eventer",
+  "skylark-domx-noder",
+  "skylark-domx-geom",
+  "skylark-domx-query",
+  "skylark-domx-plugins",
+  "skylark-domx-toggles/Collapsable",
+  "./panels",
+],function(langx,browser,eventer,noder,geom,$,plugins,Collapsable,panels){
 
+  var Panel = plugins.Plugin.inherit({
+    klassName : "Panel",
 
-  'use strict';
-
-  // COLLAPSE PUBLIC CLASS DEFINITION
-  // ================================
-
-  var Panel =  plugins.Plugin.inherit({
-    klassName: "Panel",
-
-    pluginName : "domx.panels.panel",
+    pluginName : "domx.pandels.panel",
 
     options : {
-      toggle: true
+      toggler : {
+        selector : ".panel-heading [data-toggle=\"collapse\"]"
+      },
+
+      body : {
+        selector : ".panel-collapse"
+      }
     },
 
     _construct : function(elm,options) {
-      ////options = langx.mixin({}, Collapse.DEFAULTS, $(element).data(), options)
       this.overrided(elm,options);
-      this.$element      = this.$();
-      //this.$trigger      = $('[data-toggle="collapse"][href="#' + elm.id + '"],' +
-      //                     '[data-toggle="collapse"][data-target="#' + elm.id + '"]')
-      this.transitioning = null
-
-      //if (this.options.parent) {
-      //  this.$parent = this.getParent()
-      //} else {
-      //  this.addAriaAndCollapsedClass(this.$element, this.$trigger)
-      //}
-
-      if (this.options.toggle) {
+      this._velm = this.elmx();
+      this._expanded = false;
+      this.$toggle = this._velm.find(this.options.toggler.selector);
+      this.$body = this._velm.find(this.options.body.selector);
+      this.$toggle.on('click.panel',(e) => {
         this.toggle();
+      });
+
+    },
+
+    expand : function() {
+      // expand this panel
+      this.emit("expanding");
+      this.$body.plugin(Collapsable.prototype.pluginName).show();
+      this._expanded = true;
+      this.emit("expanded");
+    },
+
+    collapse : function() {
+      // collapse this panel
+      this.emit("collapsing");
+      this.$body.plugin(Collapsable.prototype.pluginName).hide();
+      this._expanded = false;
+      this.emit("collapsed");
+    },
+
+    toggle : function() {
+      // toggle this panel
+      if (this._expanded) {
+        this.collapse();
+      } else {
+        this.expand();
       }
     },
 
-    dimension : function () {
-      var hasWidth = this.$element.hasClass('width');
-      return hasWidth ? 'width' : 'height';
+    full : function() {
+
     },
 
-    show : function () {
-      if (this.transitioning || this.$element.hasClass('in')) {
-        return;
-      }
+    unfull : function() {
 
-      //var activesData;
-      //var actives = this.$parent && this.$parent.children('.panel').children('.in, .collapsing')
-
-      //if (actives && actives.length) {
-      //  activesData = actives.data('collapse')
-      //  if (activesData && activesData.transitioning) return
-      //}
-
-      var startEvent = eventer.create('show.collapse');
-      this.$element.trigger(startEvent)
-      if (startEvent.isDefaultPrevented()) return
-
-      //if (actives && actives.length) {
-      //  //Plugin.call(actives, 'hide')
-      //  actives.plugin("domx.collapse").hide();
-      //  activesData || actives.data('collapse', null)
-      //}
-
-      var dimension = this.dimension();
-
-      this.$element
-        .removeClass('collapse')
-        .addClass('collapsing')[dimension](0)
-        .attr('aria-expanded', true)
-
-      //this.$trigger
-      //  .removeClass('collapsed')
-      //  .attr('aria-expanded', true)
-
-      this.transitioning = 1
-
-      var complete = function () {
-        this.$element
-          .removeClass('collapsing')
-          .addClass('collapse in')[dimension]('')
-        this.transitioning = 0
-        this.$element
-          .trigger('shown.collapse')
-      }
-
-      if (!browser.support.transition) {
-        return complete.call(this);
-      }
-
-      var scrollSize = langx.camelCase(['scroll', dimension].join('-'));
-
-      this.$element
-        .one('transitionEnd', langx.proxy(complete, this))
-        .emulateTransitionEnd(Panel.TRANSITION_DURATION)[dimension](this.$element[0][scrollSize]);
     },
 
-    hide : function () {
-      if (this.transitioning || !this.$element.hasClass('in')) {
-        return ;
-      }
+    toogleFull : function() {
 
-      var startEvent = eventer.create('hide.collapse');
-      this.$element.trigger(startEvent);
-      if (startEvent.isDefaultPrevented()) {
-        return ;
-      } 
-
-      var dimension = this.dimension();
-
-      this.$element[dimension](this.$element[dimension]())[0].offsetHeight;
-
-      this.$element
-        .addClass('collapsing')
-        .removeClass('collapse in')
-        .attr('aria-expanded', false);
-
-      //this.$trigger
-      //  .addClass('collapsed')
-      //  .attr('aria-expanded', false);
-
-      this.transitioning = 1;
-
-      var complete = function () {
-        this.transitioning = 0;
-        this.$element
-          .removeClass('collapsing')
-          .addClass('collapse')
-          .trigger('hidden.collapse');
-      }
-
-      if (!browser.support.transition) {
-        return complete.call(this);
-      }
-
-      this.$element
-        [dimension](0)
-        .one('transitionEnd', langx.proxy(complete, this))
-        .emulateTransitionEnd(Panel.TRANSITION_DURATION)
     },
-
-    toggle : function () {
-      this[this.$element.hasClass('in') ? 'hide' : 'show']();
+    
+    close: function () {
     }
 
-    /*
-    getParent : function () {
-      return $(this.options.parent)
-        .find('[data-toggle="collapse"][data-parent="' + this.options.parent + '"]')
-        .each(langx.proxy(function (i, element) {
-          var $element = $(element)
-          this.addAriaAndCollapsedClass(getTargetFromTrigger($element), $element)
-        }, this))
-        .end()
-    },
 
-    addAriaAndCollapsedClass : function ($element, $trigger) {
-      var isOpen = $element.hasClass('in');
-
-      $element.attr('aria-expanded', isOpen);
-      $trigger
-        .toggleClass('collapsed', !isOpen)
-        .attr('aria-expanded', isOpen);
-    }
-    */
   });
-
-  Panel.TRANSITION_DURATION = 350;
-
-  /*
-  function getTargetFromTrigger($trigger) {
-    var href
-    var target = $trigger.attr('data-target')
-      || (href = $trigger.attr('href')) && href.replace(/.*(?=#[^\s]+$)/, '') // strip for ie7
-
-    return $(target)
-  }
-  */
 
   plugins.register(Panel);
 
-  return panels.Panel = Panel;
+  return Panel;
 
 });

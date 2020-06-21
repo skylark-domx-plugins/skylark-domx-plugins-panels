@@ -4,13 +4,13 @@
   "skylark-domx-velm",
   "skylark-domx-plugins",
   "./panels",
-  "./HeaderPanel"
-],function(langx,$,elmx,plugins,panels,HeaderPanel){
+  "./Panel"
+],function(langx,$,elmx,plugins,panels,Panel){
 
-  var PanelGroup = plugins.Plugin.inherit({
-    klassName : "PanelGroup",
+  var Accordion = plugins.Plugin.inherit({
+    klassName : "Accordion",
 
-    pluginName : "domx.panels.panelGroup",
+    pluginName : "domx.panels.accordion",
 
     options : {
       panel: {
@@ -24,7 +24,7 @@
       this._velm = this.elmx();
       var panels = [];
       this._velm.$(this.options.panel.selector).forEach((panelEl) => {
-        var panel = new PanelGroup.Panel(panelEl,{
+        var panel = new Accordion.Panel(panelEl,{
           group : this
         });
         panels.push(panel);
@@ -96,7 +96,7 @@
     }
   });
 
-  PanelGroup.Panel = HeaderPanel.inherit({
+  Accordion.Panel = Panel.inherit({
     klassName : "AccordionPanel",
 
     expand : function() {
@@ -122,7 +122,7 @@
 
   });
 
-  plugins.register(PanelGroup);
+  plugins.register(Accordion);
 
-  return panels.PanelGroup = PanelGroup;
+  return panels.Accordion = Accordion;
 });
