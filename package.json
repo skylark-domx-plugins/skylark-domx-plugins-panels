@@ -1,5 +1,5 @@
 {
-  "name": "skylark-domx-panels",
+  "name": "skylark-domx-plugins-panels",
   "description": "The skylark panel plugins library for dom api extension",
   "version": "0.9.0",
   "keywords": [
@@ -8,17 +8,17 @@
     "swt",
     "widget"
   ],
-  "homepage": "https://github.com/skylark-widgets/skylark-domx-panels/",
+  "homepage": "https://github.com/skylark-widgets/skylark-domx-plugins-panels/",
   "author": "Hudaokeji, Inc.",
   "scripts": {
     "build": "sbundle build ."
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/skylark-widgets/skylark-domx-panels.git"
+    "url": "https://github.com/skylark-widgets/skylark-domx-plugins-panels.git"
   },
   "bugs": {
-    "url": "https://github.com/skylark-widgets/skylark-domx-panels/issues"
+    "url": "https://github.com/skylark-widgets/skylark-domx-plugins-panels/issues"
   },
   "license": "MIT",
   "dependencies": {
@@ -27,9 +27,9 @@
     "skylark-domx-geom": "git+https://github.com/skylark-domx/skylark-domx-geom.git#master",
     "skylark-domx-noder": "git+https://github.com/skylark-domx/skylark-domx-noder.git#master",
     "skylark-domx-plugins": "git+https://github.com/skylark-domx/skylark-domx-plugins.git#master",
-    "skylark-domx-popups": "git+https://github.com/skylark-domx/skylark-domx-popups.git#master",
+    "skylark-domx-plugins-popups": "git+https://github.com/skylark-domx-plugins/skylark-domx-plugins-popups.git#master",
+    "skylark-domx-plugins-toggles": "git+https://github.com/skylark-domx-plugins/skylark-domx-plugins-toggles.git#master",
     "skylark-domx-query": "git+https://github.com/skylark-domx/skylark-domx-query.git#master",
-    "skylark-domx-toggles": "git+https://github.com/skylark-domx/skylark-domx-toggles.git#master",
     "skylark-langx": "git+https://github.com/skylark-langx/skylark-langx.git#master"
   },
   "engines": {

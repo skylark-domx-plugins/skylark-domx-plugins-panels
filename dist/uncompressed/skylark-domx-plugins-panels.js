@@ -1,8 +1,8 @@
 /**
- * skylark-domx-panels - The skylark panel plugins library for dom api extension
+ * skylark-domx-plugins-panels - The skylark panel plugins library for dom api extension
  * @author Hudaokeji, Inc.
  * @version v0.9.0
- * @link https://github.com/skylark-widgets/skylark-domx-panels/
+ * @link https://github.com/skylark-widgets/skylark-domx-plugins-panels/
  * @license MIT
  */
 (function(factory,globals) {
@@ -86,7 +86,7 @@
 
 })(function(define,require) {
 
-define('skylark-domx-panels/panels',[
+define('skylark-domx-plugins-panels/panels',[
   "skylark-langx/skylark",
   "skylark-langx/langx",
   "skylark-domx-browser",
@@ -146,11 +146,11 @@ define('skylark-domx-panels/panels',[
 		isDownArrow: isDownArrow
 	});
 
-	return skylark.attach("domx.panels",panels);
+	return skylark.attach("domx.plugins.panels",panels);
 
 });
 
-define('skylark-domx-panels/Panel',[
+define('skylark-domx-plugins-panels/Panel',[
   "skylark-langx/langx",
   "skylark-domx-browser",
   "skylark-domx-eventer",
@@ -158,7 +158,7 @@ define('skylark-domx-panels/Panel',[
   "skylark-domx-geom",
   "skylark-domx-query",
   "skylark-domx-plugins",
-  "skylark-domx-toggles/Collapsable",
+  "skylark-domx-plugins-toggles/Collapsable",
   "./panels",
 ],function(langx,browser,eventer,noder,geom,$,plugins,Collapsable,panels){
 
@@ -237,7 +237,7 @@ define('skylark-domx-panels/Panel',[
   return Panel;
 
 });
- define('skylark-domx-panels/Accordion',[
+ define('skylark-domx-plugins-panels/Accordion',[
   "skylark-langx/langx",
   "skylark-domx-query",
   "skylark-domx-velm",
@@ -366,7 +366,7 @@ define('skylark-domx-panels/Panel',[
   return panels.Accordion = Accordion;
 });
 
-define('skylark-domx-panels/Pagination',[
+define('skylark-domx-plugins-panels/Pagination',[
   "skylark-langx/langx",
   "skylark-domx-browser",
   "skylark-domx-eventer",
@@ -624,7 +624,7 @@ define('skylark-domx-panels/Pagination',[
 
   return panels.Pagination = Pagination;
 });
-define('skylark-domx-panels/TabStrip',[
+define('skylark-domx-plugins-panels/TabStrip',[
     "skylark-langx/langx",
     "skylark-domx-browser",
     "skylark-domx-eventer",
@@ -632,8 +632,8 @@ define('skylark-domx-panels/TabStrip',[
     "skylark-domx-geom",
     "skylark-domx-query",
     "skylark-domx-plugins",
-    "skylark-domx-popups/Dropdown",
-    "skylark-domx-toggles/TabButton",
+    "skylark-domx-plugins-popups/Dropdown",
+    "skylark-domx-plugins-toggles/TabButton",
     "./panels",
 ], function(langx, browser, eventer, noder, geom,  $, plugins,Dropdown, TabButton,panels) {
 
@@ -827,7 +827,7 @@ define('skylark-domx-panels/TabStrip',[
     return panels.TabStrip = TabStrip;
 
 });
-define('skylark-domx-panels/Toolbar',[
+define('skylark-domx-plugins-panels/Toolbar',[
   "skylark-langx/langx",
   "skylark-domx-query",
   "skylark-domx-plugins",
@@ -956,7 +956,7 @@ define('skylark-domx-panels/Toolbar',[
   return panels.Toolbar = Toolbar;
 
 });
-define('skylark-domx-panels/Wizard',[
+define('skylark-domx-plugins-panels/Wizard',[
   "skylark-langx/langx",
   "skylark-domx-browser",
   "skylark-domx-eventer",
@@ -1351,7 +1351,7 @@ define('skylark-domx-panels/Wizard',[
 
 });
 
-define('skylark-domx-panels/main',[
+define('skylark-domx-plugins-panels/main',[
     "./panels",
     "./Accordion",
     "./Pagination",
@@ -1362,8 +1362,8 @@ define('skylark-domx-panels/main',[
 ], function(panels) {
     return panels;
 });
-define('skylark-domx-panels', ['skylark-domx-panels/main'], function (main) { return main; });
+define('skylark-domx-plugins-panels', ['skylark-domx-plugins-panels/main'], function (main) { return main; });
 
 
 },this);
-//# sourceMappingURL=sourcemaps/skylark-domx-panels.js.map
+//# sourceMappingURL=sourcemaps/skylark-domx-plugins-panels.js.map

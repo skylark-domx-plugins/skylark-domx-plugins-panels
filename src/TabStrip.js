@@ -6,8 +6,8 @@ define([
     "skylark-domx-geom",
     "skylark-domx-query",
     "skylark-domx-plugins",
-    "skylark-domx-popups/Dropdown",
-    "skylark-domx-toggles/TabButton",
+    "skylark-domx-plugins-popups/Dropdown",
+    "skylark-domx-plugins-toggles/TabButton",
     "./panels",
 ], function(langx, browser, eventer, noder, geom,  $, plugins,Dropdown, TabButton,panels) {
 

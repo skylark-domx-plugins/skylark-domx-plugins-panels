@@ -58,6 +58,6 @@ define([
 		isDownArrow: isDownArrow
 	});
 
-	return skylark.attach("domx.panels",panels);
+	return skylark.attach("domx.plugins.panels",panels);
 
 });
