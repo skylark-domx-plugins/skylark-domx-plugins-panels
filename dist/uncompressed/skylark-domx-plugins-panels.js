@@ -157,7 +157,7 @@ define('skylark-domx-plugins-panels/Panel',[
   "skylark-domx-noder",
   "skylark-domx-geom",
   "skylark-domx-query",
-  "skylark-domx-plugins",
+  "skylark-domx-plugins-base",
   "skylark-domx-plugins-toggles/Collapsable",
   "./panels",
 ],function(langx,browser,eventer,noder,geom,$,plugins,Collapsable,panels){
@@ -241,7 +241,7 @@ define('skylark-domx-plugins-panels/Panel',[
   "skylark-langx/langx",
   "skylark-domx-query",
   "skylark-domx-velm",
-  "skylark-domx-plugins",
+  "skylark-domx-plugins-base",
   "./panels",
   "./Panel"
 ],function(langx,$,elmx,plugins,panels,Panel){
@@ -373,7 +373,7 @@ define('skylark-domx-plugins-panels/Pagination',[
   "skylark-domx-noder",
   "skylark-domx-geom",
   "skylark-domx-query",
-  "skylark-domx-plugins",
+  "skylark-domx-plugins-base",
   "./panels"
 ],function(langx,browser,eventer,noder,geom,$,plugins,panels){
 
@@ -631,7 +631,7 @@ define('skylark-domx-plugins-panels/TabStrip',[
     "skylark-domx-noder",
     "skylark-domx-geom",
     "skylark-domx-query",
-    "skylark-domx-plugins",
+    "skylark-domx-plugins-base",
     "skylark-domx-plugins-popups/Dropdown",
     "skylark-domx-plugins-toggles/TabButton",
     "./panels",
@@ -830,7 +830,7 @@ define('skylark-domx-plugins-panels/TabStrip',[
 define('skylark-domx-plugins-panels/Toolbar',[
   "skylark-langx/langx",
   "skylark-domx-query",
-  "skylark-domx-plugins",
+  "skylark-domx-plugins-base",
   "./panels"
 ],function(langx,$,plugins,panels){ 
 
@@ -963,7 +963,7 @@ define('skylark-domx-plugins-panels/Wizard',[
   "skylark-domx-noder",
   "skylark-domx-geom",
   "skylark-domx-query",
-  "skylark-domx-plugins",
+  "skylark-domx-plugins-base",
   "./panels"
 ],function(langx,browser,eventer,noder,geom,$,plugins,panels){
 

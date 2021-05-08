@@ -1,7 +1,7 @@
 define([
   "skylark-langx/langx",
   "skylark-domx-query",
-  "skylark-domx-plugins",
+  "skylark-domx-plugins-base",
   "./panels"
 ],function(langx,$,plugins,panels){ 
 
