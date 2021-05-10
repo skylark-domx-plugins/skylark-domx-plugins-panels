@@ -6,8 +6,9 @@ define([
   "skylark-domx-geom",
   "skylark-domx-query",
   "skylark-domx-plugins-base",
+  "skylark-domx-plugins-interact/resizable",
   "./panels",
-],function(langx,browser,eventer,noder,geom,$,plugins,panels){
+],function(langx,browser,eventer,noder,geom,$,plugins,Resizable,panels){
 
   var Panel = plugins.Plugin.inherit({
     klassName : "Panel",
@@ -70,7 +71,7 @@ define([
                   minWidth : this.options.resizable.minWidth,
                   minHeight : this.options.resizable.minHeight
               },
-              started : function(){
+              started : () => {
                   this.isResizing = true;
               },
               moving : function(e) {
@@ -87,7 +88,7 @@ define([
                   });
                   */
               },
-              stopped :function () {
+              stopped : () => {
                   this.isResizing = false;
               }
           });
