@@ -2,11 +2,12 @@ define([
   "skylark-langx/langx",
   "skylark-domx-query",
   "skylark-domx-plugins-base",
-  "./panels"
-],function(langx,$,plugins,panels){ 
+  "./panels",
+  "./panel"
+],function(langx,$,plugins,panels,Panel){ 
 
 
-  var Toolbar = plugins.Plugin.inherit({
+  var Toolbar = Panel.inherit({
     klassName : "Toolbar",
 
     pluginName : "domx.panels.toolbar",
@@ -22,8 +23,7 @@ define([
     },
 
     _construct : function(elm,options) {
-      this.overrided(elm,options);
-      this._velm = this.elmx();
+      Panel.prototype._construct.call(this,elm,options);
 
       var floatInitialized, initToolbarFloat, toolbarHeight;
       //this.editor = editor;

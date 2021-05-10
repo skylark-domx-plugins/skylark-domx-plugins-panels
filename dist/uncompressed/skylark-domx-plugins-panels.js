@@ -150,7 +150,7 @@ define('skylark-domx-plugins-panels/panels',[
 
 });
 
-define('skylark-domx-plugins-panels/Panel',[
+define('skylark-domx-plugins-panels/panel',[
   "skylark-langx/langx",
   "skylark-domx-browser",
   "skylark-domx-eventer",
@@ -158,14 +158,120 @@ define('skylark-domx-plugins-panels/Panel',[
   "skylark-domx-geom",
   "skylark-domx-query",
   "skylark-domx-plugins-base",
-  "skylark-domx-plugins-toggles/Collapsable",
   "./panels",
-],function(langx,browser,eventer,noder,geom,$,plugins,Collapsable,panels){
+],function(langx,browser,eventer,noder,geom,$,plugins,panels){
 
   var Panel = plugins.Plugin.inherit({
     klassName : "Panel",
 
     pluginName : "domx.panels.panel",
+
+    options : {
+      resizable : {
+          minWidth: 320,
+          minHeight: 320,
+          border : {
+              classes :  {
+                  all : "resizable-handle",
+                  top : "resizable-handle-n",
+                  left: "resizable-handle-w",
+                  right: "resizable-handle-e",
+                  bottom: "resizable-handle-s", 
+                  topLeft : "resizable-handle-nw", 
+                  topRight : "resizable-handle-ne",
+                  bottomLeft : "resizable-handle-sw",             
+                  bottomRight : "resizable-handle-se"     
+              }
+          }
+      }
+    },
+
+    _construct : function(elm,options) {
+      this.overrided(elm,options);
+      this._velm = this.elmx();
+
+      if (this.options.resizable) {
+
+          this._resizable = new Resizable(elm,{
+              handle : {
+                  border : {
+                      directions : {
+                          top: true, //n
+                          left: true, //w
+                          right: true, //e
+                          bottom: true, //s
+                          topLeft : true, // nw
+                          topRight : true, // ne
+                          bottomLeft : true, // sw
+                          bottomRight : true // se                         
+                      },
+                      classes : {
+                          all : this.options.resizable.border.classes.all,
+                          top : this.options.resizable.border.classes.top,
+                          left: this.options.resizable.border.classes.left,
+                          right: this.options.resizable.border.classes.right,
+                          bottom: this.options.resizable.border.classes.bottom, 
+                          topLeft : this.options.resizable.border.classes.topLeft, 
+                          topRight : this.options.resizable.border.classes.topRight,
+                          bottomLeft : this.options.resizable.border.classes.bottomLeft,             
+                          bottomRight : this.options.resizable.border.classes.bottomRight                        
+                      }                        
+                  }
+              },
+              constraints : {
+                  minWidth : this.options.resizable.minWidth,
+                  minHeight : this.options.resizable.minHeight
+              },
+              started : function(){
+                  this.isResizing = true;
+              },
+              moving : function(e) {
+                  /*
+                  const imageWidth = $(image).width();
+                  const imageHeight = $(image).height();
+                  const stageWidth = $(stage).width();
+                  const stageHeight = $(stage).height();
+                  const left = (stageWidth - imageWidth) /2;
+                  const top = (stageHeight- imageHeight) /2;
+                  $(image).css({
+                      left,
+                      top
+                  });
+                  */
+              },
+              stopped :function () {
+                  this.isResizing = false;
+              }
+          });
+
+      }
+    },
+
+
+  });
+
+  plugins.register(Panel);
+
+  return Panel;
+
+});
+define('skylark-domx-plugins-panels/collapsible',[
+  "skylark-langx/langx",
+  "skylark-domx-browser",
+  "skylark-domx-eventer",
+  "skylark-domx-noder",
+  "skylark-domx-geom",
+  "skylark-domx-query",
+  "skylark-domx-plugins-base",
+  "skylark-domx-plugins-toggles/collapse",
+  "./panels",
+  "./panel"
+],function(langx,browser,eventer,noder,geom,$,plugins,Collapse,panels,Panel){
+
+  var Collapsible = plugins.Plugin.inherit({
+    klassName : "Collapsible",
+
+    pluginName : "domx.panels.collapsible",
 
     options : {
       toggler : {
@@ -178,8 +284,8 @@ define('skylark-domx-plugins-panels/Panel',[
     },
 
     _construct : function(elm,options) {
-      this.overrided(elm,options);
-      this._velm = this.elmx();
+      Panel.prototype._construct.call(this,elm,options);
+      
       this._expanded = false;
       this.$toggle = this._velm.find(this.options.toggler.selector);
       this.$body = this._velm.find(this.options.body.selector);
@@ -192,7 +298,7 @@ define('skylark-domx-plugins-panels/Panel',[
     expand : function() {
       // expand this panel
       this.emit("expanding");
-      this.$body.plugin(Collapsable.prototype.pluginName).show();
+      this.$body.plugin(Collapse.prototype.pluginName).show();
       this._expanded = true;
       this.emit("expanded");
     },
@@ -232,21 +338,22 @@ define('skylark-domx-plugins-panels/Panel',[
 
   });
 
-  plugins.register(Panel);
+  plugins.register(Collapsible);
 
-  return Panel;
+  return panels.Collapsible = Collapsible;
 
 });
- define('skylark-domx-plugins-panels/Accordion',[
+ define('skylark-domx-plugins-panels/accordion',[
   "skylark-langx/langx",
   "skylark-domx-query",
   "skylark-domx-velm",
   "skylark-domx-plugins-base",
   "./panels",
-  "./Panel"
-],function(langx,$,elmx,plugins,panels,Panel){
+  "./panel",
+  "./collapsible"
+],function(langx,$,elmx,plugins,panels,Panel,Collapsible){
 
-  var Accordion = plugins.Plugin.inherit({
+  var Accordion = Panel.inherit({
     klassName : "Accordion",
 
     pluginName : "domx.panels.accordion",
@@ -259,11 +366,10 @@ define('skylark-domx-plugins-panels/Panel',[
     },
 
      _construct : function(elm,options) {
-      this.overrided(elm,options);
-      this._velm = this.elmx();
+      Panel.prototype._construct.call(this,elm,options);
       var panels = [];
       this._velm.$(this.options.panel.selector).forEach((panelEl) => {
-        var panel = new Accordion.Panel(panelEl,{
+        var panel = new Accordion.Pane(panelEl,{
           group : this
         });
         panels.push(panel);
@@ -335,8 +441,8 @@ define('skylark-domx-plugins-panels/Panel',[
     }
   });
 
-  Accordion.Panel = Panel.inherit({
-    klassName : "AccordionPanel",
+  Accordion.Pane = Collapsible.inherit({
+    klassName : "AccordionPane",
 
     expand : function() {
       if (this.options.group.active) {
@@ -366,7 +472,187 @@ define('skylark-domx-plugins-panels/Panel',[
   return panels.Accordion = Accordion;
 });
 
-define('skylark-domx-plugins-panels/Pagination',[
+define('skylark-domx-plugins-panels/floating',[
+    "skylark-domx/noder",
+    "skylark-domx/eventer",
+    "skylark-domx/query",
+    "skylark-domx-plugins-base",
+    "skylark-domx-plugins-interact/movable",
+    "./panels",
+    "./panel"
+], function (noder,eventer,$,plugins,Movable, panels,Panel) {
+    'use strict';
+
+    var floatings = [];
+
+    var Floating = Panel.inherit({
+        klassName : "Floating",
+
+        pluginName : "domx.panels.floating",
+
+        options : {
+            selectors : {
+                headerPane  : "",
+                contentPane : "",
+                footerPane  : "",
+                titlebar : "",
+                buttons : {
+                    "fullscreen" : ".button-fullscreen",
+                    "maximize" : ".button-maximize",
+                    "minimize" : ".button-minimize",     
+                    "close" : ".button-close"
+                }
+            },
+
+            classes : {
+                "maximize" : "maximize"
+            },
+
+            fixedContent: true,
+            initMaximized: false,
+
+            movable : {
+                dragHandle: false,
+                dragCancel: null
+            }
+        },
+
+        _construct : function(elm,options) {
+            Panel.prototype._construct.call(this,elm,options);
+            this.$pane = $(this._elm);
+
+            this.isOpened = false;
+            this.isMaximized = false;
+
+            if (this.options.movable) {
+                this._movable = new Movable(elm,{
+                    handle : this.options.movable.dragHandle,
+                    starting : (e) => {
+                        const   dragCancel = this.options.movable.dragCancel, 
+                                elemCancel = $(e.target).closest(dragCancel);
+                        if (elemCancel.length) {
+                            return false;
+                        }
+                        if (this.isResizing || this.isMaximized) {
+                            return false;
+                        }
+
+                        return true;
+                    }
+                });
+
+            }
+
+            this.$close = this._velm.$(this.options.selectors.buttons.close);
+            this.$maximize = this._velm.$(this.options.selectors.buttons.maximize);
+            this.$minimize = this._velm.$(this.options.selectors.buttons.minimize);
+            this.$fullscreen = this._velm.$(this.options.selectors.buttons.fullscreen);
+
+
+            this.$close.off("click.window").on("click.window", e => {
+                this.close();
+            });
+            this.$fullscreen.off("click.window").on("click.window", () => {
+                this.fullscreen();
+            });
+            this.$maximize.off("click.window").on("click.window", () => {
+                this.maximize();
+            });
+            this.$pane.off("keydown.window").on("keydown.window", e => {
+                this._keydown(e);
+            });
+
+            floatings.push(this);
+        },
+        close: function() {
+            this.trigger('closing', this);
+            this.$pane.remove();
+            this.isOpened = false;
+            this.isMaximized = false;
+
+            ///if (!$(Constants.CLASS_NS + '-modal').length) {
+            ///    if (this.options.fixedContent) {
+            ///        $('html').css({
+            ///            overflow: '',
+            ///            'padding-right': ''
+            ///        });
+            ///    }
+                ///if (this.options.multiInstances) {
+                ///    zIndex = this.options.zIndex;
+                ///}
+            ///    eventer.off(window,"resize.window");
+            var idx = floatings.indexOf(this);
+            if (idx>-1) {
+                floatings.splice(idx,1);
+            }
+            this.trigger('closed', this);
+        },
+
+        maximize: function() {
+            this.$pane.get(0).focus();
+            if (!this.isMaximized) {
+                this.modalData = {
+                    width: this.$pane.width(),
+                    height: this.$pane.height(),
+                    left: this.$pane.offset().left,
+                    top: this.$pane.offset().top
+                };
+                this.$pane.addClass(this.options.classes.maximize);
+                this.$pane.css({
+                    width: '100%',
+                    height: '100%',
+                    left: 0,
+                    top: 0
+                });
+                this.isMaximized = true;
+            } else {
+                let $W = $(window),$D = $(document);
+                this.$pane.removeClass(this.options.classes.maximize);
+                const initModalLeft = ($W.width() - this.options.modalWidth) / 2 + $D.scrollLeft();
+                const initModalTop = ($W.height() - this.options.modalHeight) / 2 + $D.scrollTop();
+                this.$pane.css({
+                    width: this.modalData.width ? this.modalData.width : this.options.modalWidth,
+                    height: this.modalData.height ? this.modalData.height : this.options.modalHeight,
+                    left: this.modalData.left ? this.modalData.left : initModalLeft,
+                    top: this.modalData.top ? this.modalData.top : initModalTop
+                });
+                this.isMaximized = false;
+            }
+
+            eventer.resized(this._elm);
+        },
+        fullscreen: function() {
+            this.$pane.get(0).focus();
+            noder.fullscreen(this.$pane[0]);
+        },
+        _keydown: function(e) {
+            if (!this.options.keyboard) {
+                return false;
+            }
+            const keyCode = e.keyCode || e.which || e.charCode;
+            const ctrlKey = e.ctrlKey || e.metaKey;
+            const altKey = e.altKey || e.metaKey;
+            switch (keyCode) {
+
+                // Q
+                case 81:
+                    this.close();
+                    break;
+                default:
+            }
+        }
+
+    });
+
+    eventer.on(window,"resize.window", ()=>{
+        for (let i=0; i<floatings.length; i++ ) {
+            eventer.resized(floatings[i]._elm);
+        }
+    });
+
+    return panels.Floating = Floating;
+});
+define('skylark-domx-plugins-panels/pagination',[
   "skylark-langx/langx",
   "skylark-domx-browser",
   "skylark-domx-eventer",
@@ -374,12 +660,13 @@ define('skylark-domx-plugins-panels/Pagination',[
   "skylark-domx-geom",
   "skylark-domx-query",
   "skylark-domx-plugins-base",
-  "./panels"
-],function(langx,browser,eventer,noder,geom,$,plugins,panels){
+  "./panels",
+  "./panel"
+],function(langx,browser,eventer,noder,geom,$,plugins,panels,Panel){
 
   'use strict';
 
-  var Pagination = plugins.Plugin.inherit({
+  var Pagination = Panel.inherit({
       klassName : "Pagination",
 
       pluginName : "domx.panels.pagination",
@@ -406,8 +693,7 @@ define('skylark-domx-plugins-panels/Pagination',[
       },
 
       _construct : function(elm,options) {
-        this.overrided(elm,options);
-        this._velm = this.elmx();
+        Panel.prototype._construct.call(this,elm,options);
 
         this.$first = this._velm.$(this.options.selectors.firstNavi);
         this.$prev = this._velm.$(this.options.selectors.prevNavi);
@@ -624,7 +910,7 @@ define('skylark-domx-plugins-panels/Pagination',[
 
   return panels.Pagination = Pagination;
 });
-define('skylark-domx-plugins-panels/TabStrip',[
+define('skylark-domx-plugins-panels/tabstrip',[
     "skylark-langx/langx",
     "skylark-domx-browser",
     "skylark-domx-eventer",
@@ -633,11 +919,12 @@ define('skylark-domx-plugins-panels/TabStrip',[
     "skylark-domx-query",
     "skylark-domx-plugins-base",
     "skylark-domx-plugins-popups/Dropdown",
-    "skylark-domx-plugins-toggles/TabButton",
+    "skylark-domx-plugins-toggles/tab",
     "./panels",
-], function(langx, browser, eventer, noder, geom,  $, plugins,Dropdown, TabButton,panels) {
+    "./panel"
+], function(langx, browser, eventer, noder, geom,  $, plugins,Dropdown, TabButton,panels,Panel) {
 
-    var TabStrip = plugins.Plugin.inherit({
+    var TabStrip = Panel.inherit({
         klassName : "TabStrip",
         pluginName : "domx.panels.tabstrip",
 
@@ -665,160 +952,160 @@ define('skylark-domx-plugins-panels/TabStrip',[
         },
 
      _construct : function(elm,options) {
-          this.overrided(elm,options);
-          this._velm = this.elmx();
-          this.$header = this._velm.$(this.options.selectors.header); 
-          this.$tabs = this.$header.find(this.options.selectors.tab);
-          this.$content = this._velm.$(this.options.selectors.content);
-          this.$tabpanes = this.$content.find(this.options.selectors.tabpane);
+        Panel.prototype._construct.call(this,elm,options);
 
-          this.$header.find('[data-toggle="dropdown"]').plugin(Dropdown.prototype.pluginName);
+        this.$header = this._velm.$(this.options.selectors.header); 
+        this.$tabs = this.$header.find(this.options.selectors.tab);
+        this.$content = this._velm.$(this.options.selectors.content);
+        this.$tabpanes = this.$content.find(this.options.selectors.tabpane);
 
-          var self = this;
-          this.$tabs.each(function(idx,tabEl){
-            $(tabEl).plugin(TabButton.prototype.pluginName, {
-              target : self.$tabpanes[idx]
-            });
+        this.$header.find('[data-toggle="dropdown"]').plugin(Dropdown.prototype.pluginName);
+
+        var self = this;
+        this.$tabs.each(function(idx,tabEl){
+          $(tabEl).plugin(TabButton.prototype.pluginName, {
+            target : self.$tabpanes[idx]
           });
+        });
 
-        },
+      },
 
-        arrange : function () {
+      arrange : function () {
 
-          var dropdownTabsSelector = this.options.droptabs.selectors.dropdownTabs,
-              visibleTabsSelector = this.options.droptabs.selectors.visibleTabs;
+        var dropdownTabsSelector = this.options.droptabs.selectors.dropdownTabs,
+            visibleTabsSelector = this.options.droptabs.selectors.visibleTabs;
 
-              $container = this.$header;
-          var dropdown = $container.find(this.options.droptabs.selectors.dropdown);
-          var dropdownMenu = dropdown.find(this.options.droptabs.selectors.dropdownMenu);
-          var dropdownLabel = $('>a', dropdown).clone();
-          var dropdownCaret = $(this.options.droptabs.selectors.dropdownCaret, dropdown);
+            $container = this.$header;
+        var dropdown = $container.find(this.options.droptabs.selectors.dropdown);
+        var dropdownMenu = dropdown.find(this.options.droptabs.selectors.dropdownMenu);
+        var dropdownLabel = $('>a', dropdown).clone();
+        var dropdownCaret = $(this.options.droptabs.selectors.dropdownCaret, dropdown);
 
-          // We only want the default label, strip the caret out
-          $(this.options.droptabs.selectors.dropdownCaret, dropdownLabel).remove();
+        // We only want the default label, strip the caret out
+        $(this.options.droptabs.selectors.dropdownCaret, dropdownLabel).remove();
 
-          if (this.options.droptabs.pullDropdownRight) {
-            $(dropdown).addClass('pull-right');
-          }
-
-          var $dropdownTabs = function () {
-            return $(dropdownTabsSelector, dropdownMenu);
-          }
-
-          var $visibleTabs = function () {
-            return $(visibleTabsSelector, $container);
-          }
-
-          function getFirstHiddenElementWidth() {
-            var tempElem=$dropdownTabs().first().clone().appendTo($container).css("position","fixed");
-            var hiddenElementWidth = $(tempElem).outerWidth();
-            $(tempElem).remove();
-            return hiddenElementWidth;
-          }
-
-          function getHiddenElementWidth(elem) {
-            var tempElem=$(elem).clone().appendTo($container).css("position","fixed");
-            var hiddenElementWidth = $(tempElem).outerWidth();
-            $(tempElem).remove();
-            return hiddenElementWidth;
-          }
-
-          function getDropdownLabel() {
-            var labelText = 'Dropdown';
-            if ($(dropdown).hasClass('active')) {
-              labelText = $('>li.active>a', dropdownMenu).html();
-            } else if (dropdownLabel.html().length > 0) {
-              labelText = dropdownLabel.html();
-            }
-
-            labelText = $.trim(labelText);
-
-            if (labelText.length > 10) {
-              labelText = labelText.substring(0, 10) + '...';
-            }
-
-            return labelText;
-          }
-
-          function renderDropdownLabel() {
-            $('>a', dropdown).html(getDropdownLabel() + ' ' + dropdownCaret.prop('outerHTML'));
-          }
-
-          function manageActive(elem) {
-            //fixes a bug where Bootstrap can't remove the 'active' class on elements after they've been hidden inside the dropdown
-            $('a', $(elem)).on('show.bs.tab', function (e) {
-              $(e.relatedTarget).parent().removeClass('active');
-            })
-            $('a', $(elem)).on('shown.bs.tab', function (e) {
-              renderDropdownLabel();
-            })
-
-          }
-
-          function checkDropdownSelection() {
-            if ($($dropdownTabs()).filter('.active').length > 0) {
-              $(dropdown).addClass('active');
-            } else {
-              $(dropdown).removeClass('active');
-            }
-
-            renderDropdownLabel();
-          }
-
-
-          var visibleTabsWidth = function () {
-            var visibleTabsWidth = 0;
-            $($visibleTabs()).each(function( index ) {
-              visibleTabsWidth += parseInt($(this).outerWidth(), 10);
-            });
-            visibleTabsWidth = visibleTabsWidth + parseInt($(dropdown).outerWidth(), 10);
-            return visibleTabsWidth;
-          }
-
-          var availableSpace = function () {
-            return $container.outerWidth()-visibleTabsWidth();
-          }
-
-          if (availableSpace()<0) {//we will hide tabs here
-            var x = availableSpace();
-            $($visibleTabs().get().reverse()).each(function( index ){
-              if (!($(this).hasClass('always-visible'))){
-                  $(this).prependTo(dropdownMenu);
-                  x=x+$(this).outerWidth();
-              }
-              if (x>=0) {return false;}
-            });
-          }
-
-          if (availableSpace()>getFirstHiddenElementWidth()) { //and here we bring the tabs out
-            var x = availableSpace();
-            $($dropdownTabs()).each(function( index ){
-              if (getHiddenElementWidth(this) < x && !($(this).hasClass('always-dropdown'))){
-                $(this).appendTo($container);
-                x = x-$(this).outerWidth();
-              } else {return false;}
-             });
-
-            if (!this.options.droptabs.pullDropdownRight && !$(dropdown).is(':last-child')) {
-              // If not pulling-right, keep the dropdown at the end of the container.
-              $(dropdown).detach().insertAfter($container.find('li:last-child'));
-            }
-          }
-
-          if ($dropdownTabs().length <= 0) {
-            dropdown.hide();
-          } else {
-            dropdown.show();
-          }
-        },
-
-        add : function() {
-          //TODO
-        },
-
-        remove : function(){
-          //TODO
+        if (this.options.droptabs.pullDropdownRight) {
+          $(dropdown).addClass('pull-right');
         }
+
+        var $dropdownTabs = function () {
+          return $(dropdownTabsSelector, dropdownMenu);
+        }
+
+        var $visibleTabs = function () {
+          return $(visibleTabsSelector, $container);
+        }
+
+        function getFirstHiddenElementWidth() {
+          var tempElem=$dropdownTabs().first().clone().appendTo($container).css("position","fixed");
+          var hiddenElementWidth = $(tempElem).outerWidth();
+          $(tempElem).remove();
+          return hiddenElementWidth;
+        }
+
+        function getHiddenElementWidth(elem) {
+          var tempElem=$(elem).clone().appendTo($container).css("position","fixed");
+          var hiddenElementWidth = $(tempElem).outerWidth();
+          $(tempElem).remove();
+          return hiddenElementWidth;
+        }
+
+        function getDropdownLabel() {
+          var labelText = 'Dropdown';
+          if ($(dropdown).hasClass('active')) {
+            labelText = $('>li.active>a', dropdownMenu).html();
+          } else if (dropdownLabel.html().length > 0) {
+            labelText = dropdownLabel.html();
+          }
+
+          labelText = $.trim(labelText);
+
+          if (labelText.length > 10) {
+            labelText = labelText.substring(0, 10) + '...';
+          }
+
+          return labelText;
+        }
+
+        function renderDropdownLabel() {
+          $('>a', dropdown).html(getDropdownLabel() + ' ' + dropdownCaret.prop('outerHTML'));
+        }
+
+        function manageActive(elem) {
+          //fixes a bug where Bootstrap can't remove the 'active' class on elements after they've been hidden inside the dropdown
+          $('a', $(elem)).on('show.bs.tab', function (e) {
+            $(e.relatedTarget).parent().removeClass('active');
+          })
+          $('a', $(elem)).on('shown.bs.tab', function (e) {
+            renderDropdownLabel();
+          })
+
+        }
+
+        function checkDropdownSelection() {
+          if ($($dropdownTabs()).filter('.active').length > 0) {
+            $(dropdown).addClass('active');
+          } else {
+            $(dropdown).removeClass('active');
+          }
+
+          renderDropdownLabel();
+        }
+
+
+        var visibleTabsWidth = function () {
+          var visibleTabsWidth = 0;
+          $($visibleTabs()).each(function( index ) {
+            visibleTabsWidth += parseInt($(this).outerWidth(), 10);
+          });
+          visibleTabsWidth = visibleTabsWidth + parseInt($(dropdown).outerWidth(), 10);
+          return visibleTabsWidth;
+        }
+
+        var availableSpace = function () {
+          return $container.outerWidth()-visibleTabsWidth();
+        }
+
+        if (availableSpace()<0) {//we will hide tabs here
+          var x = availableSpace();
+          $($visibleTabs().get().reverse()).each(function( index ){
+            if (!($(this).hasClass('always-visible'))){
+                $(this).prependTo(dropdownMenu);
+                x=x+$(this).outerWidth();
+            }
+            if (x>=0) {return false;}
+          });
+        }
+
+        if (availableSpace()>getFirstHiddenElementWidth()) { //and here we bring the tabs out
+          var x = availableSpace();
+          $($dropdownTabs()).each(function( index ){
+            if (getHiddenElementWidth(this) < x && !($(this).hasClass('always-dropdown'))){
+              $(this).appendTo($container);
+              x = x-$(this).outerWidth();
+            } else {return false;}
+           });
+
+          if (!this.options.droptabs.pullDropdownRight && !$(dropdown).is(':last-child')) {
+            // If not pulling-right, keep the dropdown at the end of the container.
+            $(dropdown).detach().insertAfter($container.find('li:last-child'));
+          }
+        }
+
+        if ($dropdownTabs().length <= 0) {
+          dropdown.hide();
+        } else {
+          dropdown.show();
+        }
+      },
+
+      add : function() {
+        //TODO
+      },
+
+      remove : function(){
+        //TODO
+      }
     });
 
     plugins.register(TabStrip);
@@ -827,15 +1114,16 @@ define('skylark-domx-plugins-panels/TabStrip',[
     return panels.TabStrip = TabStrip;
 
 });
-define('skylark-domx-plugins-panels/Toolbar',[
+define('skylark-domx-plugins-panels/toolbar',[
   "skylark-langx/langx",
   "skylark-domx-query",
   "skylark-domx-plugins-base",
-  "./panels"
-],function(langx,$,plugins,panels){ 
+  "./panels",
+  "./panel"
+],function(langx,$,plugins,panels,Panel){ 
 
 
-  var Toolbar = plugins.Plugin.inherit({
+  var Toolbar = Panel.inherit({
     klassName : "Toolbar",
 
     pluginName : "domx.panels.toolbar",
@@ -851,8 +1139,7 @@ define('skylark-domx-plugins-panels/Toolbar',[
     },
 
     _construct : function(elm,options) {
-      this.overrided(elm,options);
-      this._velm = this.elmx();
+      Panel.prototype._construct.call(this,elm,options);
 
       var floatInitialized, initToolbarFloat, toolbarHeight;
       //this.editor = editor;
@@ -956,7 +1243,7 @@ define('skylark-domx-plugins-panels/Toolbar',[
   return panels.Toolbar = Toolbar;
 
 });
-define('skylark-domx-plugins-panels/Wizard',[
+define('skylark-domx-plugins-panels/wizard',[
   "skylark-langx/langx",
   "skylark-domx-browser",
   "skylark-domx-eventer",
@@ -964,11 +1251,12 @@ define('skylark-domx-plugins-panels/Wizard',[
   "skylark-domx-geom",
   "skylark-domx-query",
   "skylark-domx-plugins-base",
-  "./panels"
-],function(langx,browser,eventer,noder,geom,$,plugins,panels){
+  "./panels",
+  "./panel"
+ ],function(langx,browser,eventer,noder,geom,$,plugins,panels,Panel){
 
 
-	var Wizard = plugins.Plugin.inherit({
+	var Wizard = Panel.inherit({
 		klassName: "Wizard",
 
 	    pluginName : "domx.panels.wizard",
@@ -981,7 +1269,7 @@ define('skylark-domx-plugins-panels/Wizard',[
 	    },
 
 	    _construct : function(elm,options) {
-		    this.overrided(elm,options);
+      		Panel.prototype._construct.call(this,elm,options);
 
 			this.$element = this.$();
 			this.options.disablePreviousStep = (this.$element.attr('data-restrict') === 'previous') ? true : this.options.disablePreviousStep;
@@ -1353,12 +1641,14 @@ define('skylark-domx-plugins-panels/Wizard',[
 
 define('skylark-domx-plugins-panels/main',[
     "./panels",
-    "./Accordion",
-    "./Pagination",
-    "./Panel",
-    "./TabStrip",
-    "./Toolbar",
-    "./Wizard"
+    "./accordion",
+    "./collapsible",
+    "./floating",
+    "./pagination",
+    "./panel",
+    "./tabstrip",
+    "./toolbar",
+    "./wizard"
 ], function(panels) {
     return panels;
 });

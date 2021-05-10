@@ -6,11 +6,12 @@ define([
   "skylark-domx-geom",
   "skylark-domx-query",
   "skylark-domx-plugins-base",
-  "./panels"
-],function(langx,browser,eventer,noder,geom,$,plugins,panels){
+  "./panels",
+  "./panel"
+ ],function(langx,browser,eventer,noder,geom,$,plugins,panels,Panel){
 
 
-	var Wizard = plugins.Plugin.inherit({
+	var Wizard = Panel.inherit({
 		klassName: "Wizard",
 
 	    pluginName : "domx.panels.wizard",
@@ -23,7 +24,7 @@ define([
 	    },
 
 	    _construct : function(elm,options) {
-		    this.overrided(elm,options);
+      		Panel.prototype._construct.call(this,elm,options);
 
 			this.$element = this.$();
 			this.options.disablePreviousStep = (this.$element.attr('data-restrict') === 'previous') ? true : this.options.disablePreviousStep;

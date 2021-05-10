@@ -5,5 +5,5 @@
  * @link https://github.com/skylark-widgets/skylark-domx-plugins-panels/
  * @license MIT
  */
-define(["./panels","./Accordion","./Pagination","./Panel","./TabStrip","./Toolbar","./Wizard"],function(n){return n});
+define(["./panels","./accordion","./collapsible","./floating","./pagination","./panel","./tabstrip","./toolbar","./wizard"],function(a){return a});
 //# sourceMappingURL=sourcemaps/main.js.map

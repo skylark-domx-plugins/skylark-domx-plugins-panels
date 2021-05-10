@@ -6,12 +6,13 @@ define([
   "skylark-domx-geom",
   "skylark-domx-query",
   "skylark-domx-plugins-base",
-  "./panels"
-],function(langx,browser,eventer,noder,geom,$,plugins,panels){
+  "./panels",
+  "./panel"
+],function(langx,browser,eventer,noder,geom,$,plugins,panels,Panel){
 
   'use strict';
 
-  var Pagination = plugins.Plugin.inherit({
+  var Pagination = Panel.inherit({
       klassName : "Pagination",
 
       pluginName : "domx.panels.pagination",
@@ -38,8 +39,7 @@ define([
       },
 
       _construct : function(elm,options) {
-        this.overrided(elm,options);
-        this._velm = this.elmx();
+        Panel.prototype._construct.call(this,elm,options);
 
         this.$first = this._velm.$(this.options.selectors.firstNavi);
         this.$prev = this._velm.$(this.options.selectors.prevNavi);

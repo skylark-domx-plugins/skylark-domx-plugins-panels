@@ -6,9 +6,8 @@ define([
   "skylark-domx-geom",
   "skylark-domx-query",
   "skylark-domx-plugins-base",
-  "skylark-domx-plugins-toggles/Collapsable",
   "./panels",
-],function(langx,browser,eventer,noder,geom,$,plugins,Collapsable,panels){
+],function(langx,browser,eventer,noder,geom,$,plugins,panels){
 
   var Panel = plugins.Plugin.inherit({
     klassName : "Panel",
@@ -16,66 +15,85 @@ define([
     pluginName : "domx.panels.panel",
 
     options : {
-      toggler : {
-        selector : ".panel-heading [data-toggle=\"collapse\"]"
-      },
-
-      body : {
-        selector : ".panel-collapse"
+      resizable : {
+          minWidth: 320,
+          minHeight: 320,
+          border : {
+              classes :  {
+                  all : "resizable-handle",
+                  top : "resizable-handle-n",
+                  left: "resizable-handle-w",
+                  right: "resizable-handle-e",
+                  bottom: "resizable-handle-s", 
+                  topLeft : "resizable-handle-nw", 
+                  topRight : "resizable-handle-ne",
+                  bottomLeft : "resizable-handle-sw",             
+                  bottomRight : "resizable-handle-se"     
+              }
+          }
       }
     },
 
     _construct : function(elm,options) {
       this.overrided(elm,options);
       this._velm = this.elmx();
-      this._expanded = false;
-      this.$toggle = this._velm.find(this.options.toggler.selector);
-      this.$body = this._velm.find(this.options.body.selector);
-      this.$toggle.on('click.panel',(e) => {
-        this.toggle();
-      });
 
-    },
+      if (this.options.resizable) {
 
-    expand : function() {
-      // expand this panel
-      this.emit("expanding");
-      this.$body.plugin(Collapsable.prototype.pluginName).show();
-      this._expanded = true;
-      this.emit("expanded");
-    },
+          this._resizable = new Resizable(elm,{
+              handle : {
+                  border : {
+                      directions : {
+                          top: true, //n
+                          left: true, //w
+                          right: true, //e
+                          bottom: true, //s
+                          topLeft : true, // nw
+                          topRight : true, // ne
+                          bottomLeft : true, // sw
+                          bottomRight : true // se                         
+                      },
+                      classes : {
+                          all : this.options.resizable.border.classes.all,
+                          top : this.options.resizable.border.classes.top,
+                          left: this.options.resizable.border.classes.left,
+                          right: this.options.resizable.border.classes.right,
+                          bottom: this.options.resizable.border.classes.bottom, 
+                          topLeft : this.options.resizable.border.classes.topLeft, 
+                          topRight : this.options.resizable.border.classes.topRight,
+                          bottomLeft : this.options.resizable.border.classes.bottomLeft,             
+                          bottomRight : this.options.resizable.border.classes.bottomRight                        
+                      }                        
+                  }
+              },
+              constraints : {
+                  minWidth : this.options.resizable.minWidth,
+                  minHeight : this.options.resizable.minHeight
+              },
+              started : function(){
+                  this.isResizing = true;
+              },
+              moving : function(e) {
+                  /*
+                  const imageWidth = $(image).width();
+                  const imageHeight = $(image).height();
+                  const stageWidth = $(stage).width();
+                  const stageHeight = $(stage).height();
+                  const left = (stageWidth - imageWidth) /2;
+                  const top = (stageHeight- imageHeight) /2;
+                  $(image).css({
+                      left,
+                      top
+                  });
+                  */
+              },
+              stopped :function () {
+                  this.isResizing = false;
+              }
+          });
 
-    collapse : function() {
-      // collapse this panel
-      this.emit("collapsing");
-      this.$body.plugin(Collapsable.prototype.pluginName).hide();
-      this._expanded = false;
-      this.emit("collapsed");
-    },
-
-    toggle : function() {
-      // toggle this panel
-      if (this._expanded) {
-        this.collapse();
-      } else {
-        this.expand();
       }
     },
-
-    full : function() {
-
-    },
-
-    unfull : function() {
-
-    },
-
-    toogleFull : function() {
-
-    },
-    
-    close: function () {
-    }
 
 
   });

@@ -4,10 +4,11 @@
   "skylark-domx-velm",
   "skylark-domx-plugins-base",
   "./panels",
-  "./Panel"
-],function(langx,$,elmx,plugins,panels,Panel){
+  "./panel",
+  "./collapsible"
+],function(langx,$,elmx,plugins,panels,Panel,Collapsible){
 
-  var Accordion = plugins.Plugin.inherit({
+  var Accordion = Panel.inherit({
     klassName : "Accordion",
 
     pluginName : "domx.panels.accordion",
@@ -20,11 +21,10 @@
     },
 
      _construct : function(elm,options) {
-      this.overrided(elm,options);
-      this._velm = this.elmx();
+      Panel.prototype._construct.call(this,elm,options);
       var panels = [];
       this._velm.$(this.options.panel.selector).forEach((panelEl) => {
-        var panel = new Accordion.Panel(panelEl,{
+        var panel = new Accordion.Pane(panelEl,{
           group : this
         });
         panels.push(panel);
@@ -96,8 +96,8 @@
     }
   });
 
-  Accordion.Panel = Panel.inherit({
-    klassName : "AccordionPanel",
+  Accordion.Pane = Collapsible.inherit({
+    klassName : "AccordionPane",
 
     expand : function() {
       if (this.options.group.active) {
