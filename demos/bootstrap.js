@@ -19,6 +19,16 @@ requirejs.config({
             main: 'main'
          },
          {
+           name : "skylark-langx-binary",
+           location : "../node_modules/skylark-langx-binary/dist/uncompressed/skylark-langx-binary",
+            main: 'main'
+         },
+         {
+           name : "skylark-langx-constructs",
+           location : "../node_modules/skylark-langx-constructs/dist/uncompressed/skylark-langx-constructs",
+            main: 'main'
+         },
+         {
            name : "skylark-langx-datetimes",
            location : "../node_modules/skylark-langx-datetimes/dist/uncompressed/skylark-langx-datetimes",
             main: 'main'
@@ -36,6 +46,11 @@ requirejs.config({
          {
            name : "skylark-langx-funcs",
            location : "../node_modules/skylark-langx-funcs/dist/uncompressed/skylark-langx-funcs",
+            main: 'main'
+         },
+         {
+           name : "skylark-langx-globals",
+           location : "../node_modules/skylark-langx-globals/dist/uncompressed/skylark-langx-globals",
             main: 'main'
          },
          {
@@ -59,8 +74,8 @@ requirejs.config({
             main: 'main'
          },
          {
-           name : "skylark-langx-numbers",
-           location : "../node_modules/skylark-langx-numbers/dist/uncompressed/skylark-langx-numbers",
+           name : "skylark-langx-numerics",
+           location : "../node_modules/skylark-langx-numerics/dist/uncompressed/skylark-langx-numerics",
             main: 'main'
          },
          {
@@ -95,6 +110,11 @@ requirejs.config({
          },
 
 
+         {
+           name : "skylark-domx",
+           location : "../node_modules/skylark-domx/dist/uncompressed/skylark-domx",
+            main: 'main'
+         },
          {
            name : "skylark-domx-browser",
            location : "../node_modules/skylark-domx-browser/dist/uncompressed/skylark-domx-browser",
@@ -151,15 +171,21 @@ requirejs.config({
             main: 'main'
          },
          {
-           name : "skylark-domx-plugins",
-           location : "../node_modules/skylark-domx-plugins/dist/uncompressed/skylark-domx-plugins",
+           name : "skylark-domx-plugins-base",
+           location : "../node_modules/skylark-domx-plugins-base/dist/uncompressed/skylark-domx-plugins-base",
             main: 'main'
          },
          {
-           name : "skylark-domx-popups",
-           location : "../node_modules/skylark-domx-popups/dist/uncompressed/skylark-domx-popups",
+           name : "skylark-domx-plugins-popups",
+           location : "../node_modules/skylark-domx-plugins-popups/dist/uncompressed/skylark-domx-plugins-popups",
             main: 'main'
          },
+         {
+           name : "skylark-domx-plugins-interact",
+           location : "../node_modules/skylark-domx-plugins-interact/dist/uncompressed/skylark-domx-plugins-interact",
+            main: 'main'
+         },
+
          {
            name : "skylark-domx-query",
            location : "../node_modules/skylark-domx-query/dist/uncompressed/skylark-domx-query",
@@ -187,8 +213,8 @@ requirejs.config({
             main: 'main'
          },         
          {
-           name : "skylark-domx-toggles",
-           location : "../node_modules/skylark-domx-toggles/dist/uncompressed/skylark-domx-toggles",
+           name : "skylark-domx-plugins-toggles",
+           location : "../node_modules/skylark-domx-plugins-toggles/dist/uncompressed/skylark-domx-plugins-toggles",
             main: 'main'
          },
          {
@@ -204,7 +230,7 @@ requirejs.config({
          },
 
           {
-            name: 'skylark-domx-panels',
+            name: 'skylark-domx-plugins-panels',
             location : "../src",
             main: 'main'
           }      
@@ -214,7 +240,7 @@ requirejs.config({
  
 // require(["module/name", ...], function(params){ ... });
 require(["skylark-domx-query"], function ($) {
-    require(["skylark-domx-panels"], function (panels) {
+    require(["skylark-domx-plugins-panels"], function (panels) {
         if (window.initPage) {
             window.initPage($,panels);
         }

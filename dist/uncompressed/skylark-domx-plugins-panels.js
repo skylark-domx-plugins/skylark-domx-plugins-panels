@@ -280,7 +280,7 @@ define('skylark-domx-plugins-panels/collapsible',[
       },
 
       body : {
-        selector : ".panel-collapse"
+        selector : ".panel-panel"
       }
     },
 
@@ -307,7 +307,7 @@ define('skylark-domx-plugins-panels/collapsible',[
     collapse : function() {
       // collapse this panel
       this.emit("collapsing");
-      this.$body.plugin(Collapsable.prototype.pluginName).hide();
+      this.$body.plugin(Collapse.prototype.pluginName).hide();
       this._expanded = false;
       this.emit("collapsed");
     },
