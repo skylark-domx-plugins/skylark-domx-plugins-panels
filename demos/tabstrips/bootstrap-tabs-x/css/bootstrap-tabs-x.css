@@ -330,3 +330,18 @@
 .tabs-krajee.tabs-right.tab-sideways .tab-content {
     margin-right: 41px;
 }
+
+.tabs-left .nav-tabs li{
+    -webkit-transform-origin: 0 0;
+       -moz-transform-origin: 0 0;
+         -o-transform-origin: 0 0;
+            transform-origin: 0 0;
+    -webkit-transform: rotate(-90deg) ;
+       -moz-transform: rotate(-90deg) ;
+         -o-transform: rotate(-90deg) ;
+            transform: rotate(-90deg) ;
+	position:absolute;
+	white-space:nowrap;
+	top:40px;
+	left:0px;
+}
