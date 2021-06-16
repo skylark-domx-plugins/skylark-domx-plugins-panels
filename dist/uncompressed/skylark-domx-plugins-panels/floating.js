@@ -14,7 +14,7 @@ define([
     var Floating = Panel.inherit({
         klassName : "Floating",
 
-        pluginName : "domx.panels.floating",
+        pluginName : "lark.panels.floating",
 
         options : {
             selectors : {

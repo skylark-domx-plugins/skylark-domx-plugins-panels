@@ -13,7 +13,7 @@ define([
   var Panel = plugins.Plugin.inherit({
     klassName : "Panel",
 
-    pluginName : "domx.panels.panel",
+    pluginName : "lark.panels.panel",
 
     options : {
       resizable : {

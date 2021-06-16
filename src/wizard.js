@@ -14,7 +14,7 @@ define([
 	var Wizard = Panel.inherit({
 		klassName: "Wizard",
 
-	    pluginName : "domx.panels.wizard",
+	    pluginName : "lark.panels.wizard",
 
 	    options : {
 			disablePreviousStep: false,

@@ -165,7 +165,7 @@ define('skylark-domx-plugins-panels/panel',[
   var Panel = plugins.Plugin.inherit({
     klassName : "Panel",
 
-    pluginName : "domx.panels.panel",
+    pluginName : "lark.panels.panel",
 
     options : {
       resizable : {
@@ -272,7 +272,7 @@ define('skylark-domx-plugins-panels/collapsible',[
   var Collapsible = plugins.Plugin.inherit({
     klassName : "Collapsible",
 
-    pluginName : "domx.panels.collapsible",
+    pluginName : "lark.panels.collapsible",
 
     options : {
       toggler : {
@@ -357,7 +357,7 @@ define('skylark-domx-plugins-panels/collapsible',[
   var Accordion = Panel.inherit({
     klassName : "Accordion",
 
-    pluginName : "domx.panels.accordion",
+    pluginName : "lark.panels.accordion",
 
     options : {
       panel: {
@@ -489,7 +489,7 @@ define('skylark-domx-plugins-panels/floating',[
     var Floating = Panel.inherit({
         klassName : "Floating",
 
-        pluginName : "domx.panels.floating",
+        pluginName : "lark.panels.floating",
 
         options : {
             selectors : {
@@ -670,7 +670,7 @@ define('skylark-domx-plugins-panels/pagination',[
   var Pagination = Panel.inherit({
       klassName : "Pagination",
 
-      pluginName : "domx.panels.pagination",
+      pluginName : "lark.panels.pagination",
 
       options : {
           tagName : "ul",
@@ -927,7 +927,7 @@ define('skylark-domx-plugins-panels/tabstrip',[
 
     var TabStrip = Panel.inherit({
         klassName : "TabStrip",
-        pluginName : "domx.panels.tabstrip",
+        pluginName : "lark.panels.tabstrip",
 
         options : {
           selectors : {
@@ -1127,7 +1127,7 @@ define('skylark-domx-plugins-panels/toolbar',[
   var Toolbar = Panel.inherit({
     klassName : "Toolbar",
 
-    pluginName : "domx.panels.toolbar",
+    pluginName : "lark.panels.toolbar",
 
     options : {
       toolbarFloat: true,
@@ -1260,7 +1260,7 @@ define('skylark-domx-plugins-panels/wizard',[
 	var Wizard = Panel.inherit({
 		klassName: "Wizard",
 
-	    pluginName : "domx.panels.wizard",
+	    pluginName : "lark.panels.wizard",
 
 	    options : {
 			disablePreviousStep: false,

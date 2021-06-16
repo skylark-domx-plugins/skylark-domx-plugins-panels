@@ -11,7 +11,7 @@
   var Accordion = Panel.inherit({
     klassName : "Accordion",
 
-    pluginName : "domx.panels.accordion",
+    pluginName : "lark.panels.accordion",
 
     options : {
       panel: {

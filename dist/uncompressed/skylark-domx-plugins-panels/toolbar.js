@@ -10,7 +10,7 @@ define([
   var Toolbar = Panel.inherit({
     klassName : "Toolbar",
 
-    pluginName : "domx.panels.toolbar",
+    pluginName : "lark.panels.toolbar",
 
     options : {
       toolbarFloat: true,

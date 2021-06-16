@@ -14,7 +14,7 @@ define([
   var Collapsible = plugins.Plugin.inherit({
     klassName : "Collapsible",
 
-    pluginName : "domx.panels.collapsible",
+    pluginName : "lark.panels.collapsible",
 
     options : {
       toggler : {

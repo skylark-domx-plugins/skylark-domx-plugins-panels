@@ -14,7 +14,7 @@ define([
 
     var TabStrip = Panel.inherit({
         klassName : "TabStrip",
-        pluginName : "domx.panels.tabstrip",
+        pluginName : "lark.panels.tabstrip",
 
         options : {
           selectors : {
