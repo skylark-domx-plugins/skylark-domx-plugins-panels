@@ -16,6 +16,7 @@ define([
     pluginName : "lark.panels.panel",
 
     options : {
+      /*
       resizable : {
           minWidth: 320,
           minHeight: 320,
@@ -33,6 +34,7 @@ define([
               }
           }
       }
+      */
     },
 
     _construct : function(elm,options) {

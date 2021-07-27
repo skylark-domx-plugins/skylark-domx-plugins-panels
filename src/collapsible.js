@@ -11,7 +11,7 @@ define([
   "./panel"
 ],function(langx,browser,eventer,noder,geom,$,plugins,Collapse,panels,Panel){
 
-  var Collapsible = plugins.Plugin.inherit({
+  var Collapsible = Panel.inherit({
     klassName : "Collapsible",
 
     pluginName : "lark.panels.collapsible",
@@ -22,7 +22,7 @@ define([
       },
 
       body : {
-        selector : ".panel-panel"
+        selector : ".panel-body"
       }
     },
 

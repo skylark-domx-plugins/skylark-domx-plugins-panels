@@ -168,6 +168,7 @@ define('skylark-domx-plugins-panels/panel',[
     pluginName : "lark.panels.panel",
 
     options : {
+      /*
       resizable : {
           minWidth: 320,
           minHeight: 320,
@@ -185,6 +186,7 @@ define('skylark-domx-plugins-panels/panel',[
               }
           }
       }
+      */
     },
 
     _construct : function(elm,options) {
@@ -269,7 +271,7 @@ define('skylark-domx-plugins-panels/collapsible',[
   "./panel"
 ],function(langx,browser,eventer,noder,geom,$,plugins,Collapse,panels,Panel){
 
-  var Collapsible = plugins.Plugin.inherit({
+  var Collapsible = Panel.inherit({
     klassName : "Collapsible",
 
     pluginName : "lark.panels.collapsible",
@@ -280,7 +282,7 @@ define('skylark-domx-plugins-panels/collapsible',[
       },
 
       body : {
-        selector : ".panel-panel"
+        selector : ".panel-body"
       }
     },
 
