@@ -93,8 +93,9 @@ define('skylark-domx-plugins-panels/panels',[
   "skylark-domx-eventer",
   "skylark-domx-noder",
   "skylark-domx-geom",
-  "skylark-domx-query"
-],function(skylark,langx,browser,eventer,noder,geom,$){
+  "skylark-domx-query",
+  "skylark-domx-plugins-base/plugins"
+],function(skylark,langx,browser,eventer,noder,geom,$,plugins){
 	var panels = {};
 
 	var CONST = {
@@ -146,7 +147,7 @@ define('skylark-domx-plugins-panels/panels',[
 		isDownArrow: isDownArrow
 	});
 
-	return skylark.attach("domx.plugins.panels",panels);
+	return plugins.panels = panels;
 
 });
 
