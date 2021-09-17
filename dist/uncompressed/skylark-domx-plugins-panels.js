@@ -1268,11 +1268,18 @@ define('skylark-domx-plugins-panels/tabstrip',[
         }
       },
 
-      add : function() {
+      //Activates a tab specified as a selector. 
+      activateTab : function(tab) {
+        if (langx.isNumber(tab)) {
+          $(this.$tabs[tab]).plugin(TabButton.prototype.pluginName).show();
+        }
+      },
+
+      addTab : function() {
         //TODO
       },
 
-      remove : function(){
+      removeTab : function(){
         //TODO
       }
     });
